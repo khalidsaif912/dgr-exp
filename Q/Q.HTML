@@ -686,6 +686,7 @@
 
       <div class="bottomBar">
         <div class="controls">
+          <button class="btn" id="btnGames" title="قائمة الألعاب">🎮 الألعاب</button>
           <button class="btn" id="btnSound" title="كتم الصوت">🔊</button>
           <button class="btn primary" id="btnRestart" title="إعادة">🔄 إعادة</button>
           <button class="btn" id="btnTrophy" title="السجل العالمي">🏆</button>
@@ -971,6 +972,7 @@ const btnSound = document.getElementById("btnSound");
 const btnInfo = document.getElementById("btnInfo");
 const btnMore = document.getElementById("btnMore");
 const btnTrophy = document.getElementById("btnTrophy");
+const btnGames = document.getElementById("btnGames");
 
 const endModal = document.getElementById("endModal");
 const endClose = document.getElementById("endClose");
@@ -1614,6 +1616,11 @@ async function loadGamesMenu(){
 }
 
 if(sideGames) sideGames.addEventListener("click", async ()=>{
+  await loadGamesMenu();
+  document.getElementById("gamesModal")?.classList.add('show');
+});
+
+if(btnGames) btnGames.addEventListener("click", async ()=>{
   await loadGamesMenu();
   document.getElementById("gamesModal")?.classList.add('show');
 });
