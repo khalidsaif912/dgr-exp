@@ -53,6 +53,7 @@ body{
 
 .container{
   min-height:100vh;
+  min-height:100dvh;
   padding:calc(78px + env(safe-area-inset-top, 0px)) 14px 24px;
   display:flex;align-items:flex-start;justify-content:center;
 }
@@ -235,6 +236,79 @@ body{
   .game-item:hover{background:rgba(255,255,255,.06);transform:translateY(-1px)}
 }
 @media (max-width:719px){
+  .topbar{
+    left:10px;right:10px;
+    height:48px;border-radius:16px;
+    padding:6px 10px;
+  }
+  .brand .appname{font-size:10px}
+  .brand .title{font-size:13px}
+  .iconBtn{width:36px;height:36px;border-radius:12px;font-size:17px}
+  .container{
+    padding:calc(58px + env(safe-area-inset-top, 0px)) 10px 6px;
+    align-items:stretch;
+  }
+  .shell{
+    display:flex;
+    flex-direction:column;
+    min-height:calc(100dvh - 58px - env(safe-area-inset-top, 0px) - 6px);
+  }
+  .heroCard{
+    padding:8px 10px 8px;
+    margin-bottom:6px;
+    border-radius:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,.28);
+  }
+  .heroTop{
+    align-items:center;
+    gap:8px;
+    margin-bottom:0;
+  }
+  .heroMark{
+    width:34px;height:34px;
+    font-size:17px;
+    border-radius:11px;
+  }
+  .hero .h{
+    font-size:15px;
+    line-height:1.2;
+  }
+  .hero .sub{display:none}
+  .badges{
+    margin-top:5px;
+    gap:4px;
+  }
+  .badge{
+    font-size:9px;
+    padding:3px 7px;
+  }
+  .sectionHead{margin:0 0 5px}
+  .sectionTitle{font-size:12px}
+  .sectionHint{display:none}
+  .games-grid{gap:5px;flex:1}
+  .game-item{
+    padding:6px 8px 6px 9px;
+    gap:7px;
+    border-radius:13px;
+  }
+  .game-item .game-icon{
+    width:36px;height:36px;
+    font-size:19px;
+    border-radius:11px;
+  }
+  .game-item .game-body{gap:0}
+  .game-item .name{font-size:13px;line-height:1.2}
+  .game-item .status{display:none}
+  .game-item .record-line{
+    font-size:9px;
+    line-height:1.25;
+    margin-top:1px;
+  }
+  .game-item .game-cta{
+    font-size:9px;
+    padding:5px 8px;
+  }
+  .note{display:none}
   .badge.hide-sm{display:none}
 }
 @media (prefers-reduced-motion: reduce){
@@ -261,9 +335,9 @@ body{
           <h1 class="h">درّب ذاكرتك بسرعة</h1>
         </div>
       </div>
-      <p class="sub">ألعاب خفيفة في المتصفح — بدون تثبيت. اختر لعبة من القائمة أو زر 🎮 بالأعلى.</p>
+      <p class="sub">ألعاب خفيفة في المتصفح — اختر لعبة أو زر 🎮 بالأعلى.</p>
       <div class="badges">
-        <span class="badge">٤ ألعاب جاهزة</span>
+        <span class="badge">٤ ألعاب</span>
         <span class="badge muted">🏆 سجل عالمي</span>
         <span class="badge muted hide-sm">تحميل أسرع</span>
       </div>
