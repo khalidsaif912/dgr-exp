@@ -69,9 +69,18 @@ body{
 }
 .heroTop{
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   gap:12px;
   margin-bottom:10px;
+}
+.heroTop .h{
+  margin:0;
+  flex:1;
+  min-width:0;
+}
+.badges--inline{
+  margin-top:0;
+  flex-shrink:0;
 }
 .heroMark{
   width:48px;height:48px;border-radius:16px;flex-shrink:0;
@@ -81,7 +90,8 @@ body{
   background:linear-gradient(145deg, rgba(79,172,254,.22), rgba(0,242,254,.10));
 }
 .heroText{flex:1;min-width:0}
-.hero .h{
+.hero .h,
+.heroTop .h{
   margin:0;
   font-size:clamp(21px,5.5vw,32px);
   font-weight:950;
@@ -126,6 +136,12 @@ body{
   font-size:14px;font-weight:800;color:var(--text);
 }
 .sectionHint{font-size:11px;color:var(--muted)}
+
+.gamesPanel{
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
 
 .games-grid{
   display:flex;
@@ -228,6 +244,10 @@ body{
 @media (min-width:720px){
   .container{padding-left:20px;padding-right:20px}
   .heroCard{padding:22px 20px;border-radius:28px}
+  .heroTop{align-items:flex-start;flex-wrap:wrap}
+  .heroTop .h{flex:1 1 100%}
+  .badges--inline{flex:1 1 100%;margin-top:8px}
+  .gamesPanel{flex:none}
   .games-grid{
     display:grid;
     grid-template-columns:repeat(2,1fr);
@@ -238,75 +258,103 @@ body{
 @media (max-width:719px){
   .topbar{
     left:10px;right:10px;
-    height:48px;border-radius:16px;
-    padding:6px 10px;
+    height:46px;border-radius:16px;
+    padding:5px 10px;
   }
   .brand .appname{font-size:10px}
   .brand .title{font-size:13px}
   .iconBtn{width:36px;height:36px;border-radius:12px;font-size:17px}
   .container{
-    padding:calc(58px + env(safe-area-inset-top, 0px)) 10px 6px;
+    padding:calc(56px + env(safe-area-inset-top, 0px)) 10px 8px;
     align-items:stretch;
   }
   .shell{
     display:flex;
     flex-direction:column;
-    min-height:calc(100dvh - 58px - env(safe-area-inset-top, 0px) - 6px);
+    flex:1;
+    min-height:calc(100dvh - 56px - env(safe-area-inset-top, 0px) - 8px);
   }
   .heroCard{
-    padding:8px 10px 8px;
-    margin-bottom:6px;
-    border-radius:14px;
-    box-shadow:0 8px 24px rgba(0,0,0,.28);
+    flex:0 0 auto;
+    padding:6px 8px;
+    margin-bottom:4px;
+    border-radius:12px;
+    box-shadow:0 4px 16px rgba(0,0,0,.22);
   }
   .heroTop{
-    align-items:center;
-    gap:8px;
+    gap:6px;
     margin-bottom:0;
+    flex-wrap:nowrap;
   }
   .heroMark{
-    width:34px;height:34px;
-    font-size:17px;
-    border-radius:11px;
-  }
-  .hero .h{
+    width:28px;height:28px;
     font-size:15px;
-    line-height:1.2;
+    border-radius:9px;
+  }
+  .heroTop .h{
+    font-size:13px;
+    line-height:1.15;
+    flex:1 1 auto;
+    -webkit-text-fill-color:#EEF3FF;
+    background:none;
   }
   .hero .sub{display:none}
-  .badges{
-    margin-top:5px;
-    gap:4px;
+  .badges--inline{
+    gap:3px;
   }
-  .badge{
-    font-size:9px;
-    padding:3px 7px;
+  .badges--inline .badge{
+    font-size:8px;
+    padding:2px 5px;
   }
-  .sectionHead{margin:0 0 5px}
-  .sectionTitle{font-size:12px}
+  .gamesPanel{
+    flex:1 1 0;
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  .sectionHead{
+    flex:0 0 auto;
+    margin:0 0 6px;
+  }
+  .sectionTitle{font-size:13px;font-weight:900}
   .sectionHint{display:none}
-  .games-grid{gap:5px;flex:1}
-  .game-item{
-    padding:6px 8px 6px 9px;
+  .games-grid{
+    flex:1 1 0;
     gap:7px;
-    border-radius:13px;
+    min-height:0;
+    justify-content:stretch;
+  }
+  .game-item{
+    flex:1 1 0;
+    min-height:0;
+    padding:10px 10px 10px 11px;
+    gap:10px;
+    border-radius:15px;
   }
   .game-item .game-icon{
-    width:36px;height:36px;
-    font-size:19px;
-    border-radius:11px;
+    width:44px;height:44px;
+    font-size:23px;
+    border-radius:13px;
   }
-  .game-item .game-body{gap:0}
-  .game-item .name{font-size:13px;line-height:1.2}
-  .game-item .status{display:none}
+  .game-item .game-body{
+    gap:2px;
+    justify-content:center;
+  }
+  .game-item .name{font-size:14px;line-height:1.25}
+  .game-item .status{
+    display:block;
+    font-size:10px;
+    line-height:1.3;
+    opacity:.9;
+  }
   .game-item .record-line{
-    font-size:9px;
-    line-height:1.25;
-    margin-top:1px;
+    font-size:10px;
+    line-height:1.3;
+    margin-top:2px;
   }
   .game-item .game-cta{
-    font-size:9px;
-    padding:5px 8px;
+    font-size:10px;
+    padding:7px 11px;
   }
   .note{display:none}
   .badge.hide-sm{display:none}
@@ -331,23 +379,23 @@ body{
     <div class="heroCard">
       <div class="heroTop">
         <div class="heroMark" aria-hidden="true">🧠</div>
-        <div class="heroText">
-          <h1 class="h">درّب ذاكرتك بسرعة</h1>
+        <h1 class="h">درّب ذاكرتك بسرعة</h1>
+        <div class="badges badges--inline">
+          <span class="badge">٤ ألعاب</span>
+          <span class="badge muted">🏆</span>
+          <span class="badge muted hide-sm">سجل عالمي</span>
         </div>
       </div>
       <p class="sub">ألعاب خفيفة في المتصفح — اختر لعبة أو زر 🎮 بالأعلى.</p>
-      <div class="badges">
-        <span class="badge">٤ ألعاب</span>
-        <span class="badge muted">🏆 سجل عالمي</span>
-        <span class="badge muted hide-sm">تحميل أسرع</span>
-      </div>
     </div>
 
+    <div class="gamesPanel">
     <div class="sectionHead">
       <p class="sectionTitle">الألعاب</p>
       <span class="sectionHint">اضغط للعب</span>
     </div>
     <div class="games-grid" id="homeGamesGrid"></div>
+    </div>
 
     <div class="note">
       💡 في كل لعبة زر <strong>🎮</strong> يفتح نفس القائمة. الصور من CDN — الزيارة الثانية أسرع.
