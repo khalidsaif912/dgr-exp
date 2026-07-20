@@ -241,20 +241,23 @@
   .qImgWrap{
     background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
     border:1px solid rgba(255,255,255,.08);
-    padding: 12px;
-    border-radius:20px;
+    padding: 10px;
+    border-radius:22px;
     box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
-    display:flex;
+    display:inline-flex;
     align-items:center;
     justify-content:center;
     position:relative;
-    min-height: 240px;
+    align-self:center;
+    min-height: 0;
+    width: fit-content;
+    max-width: 100%;
   }
   .qImgWrap img{
     width: auto;
     max-width: 100%;
     height: auto;
-    max-height: clamp(300px, 45vh, 520px);
+    max-height: clamp(280px, 43vh, 500px);
     object-fit: contain;
     border-radius: 18px;
     border: 2px solid rgba(255,255,255,.28);
@@ -501,7 +504,7 @@
     .pill{padding:8px 10px;border-radius:15px;gap:8px}
     .kv b{font-size:17px}
     .grid{grid-template-columns:repeat(3,1fr); gap:10px}
-    .qImgWrap img{max-height: clamp(240px, 40vh, 420px);}
+    .qImgWrap img{max-height: clamp(220px, 36vh, 380px);}
   }
   @media (max-width: 520px){
     .card{
@@ -527,15 +530,15 @@
     .content{gap:10px}
     .panel{padding:10px;border-radius:18px;gap:10px}
     .qImgWrap{
-      min-height:0;
-      padding:10px;
-      margin-bottom:4px;
+      padding:8px;
+      margin-bottom:2px;
       border-radius:18px;
     }
     .qImgWrap img{
-      width:100%;
+      width:auto;
+      max-width:100%;
       height:auto;
-      max-height:30vh;
+      max-height:26vh;
       border-radius:16px;
     }
     .timerRow{margin-top:2px; gap:8px;}
@@ -662,7 +665,7 @@
       </div>
 
       <div class="content">
-        <div class="panel" style="flex:1; min-height:0;">
+        <div class="panel">
           <div class="qImgWrap">
             <img id="qImg" alt="السؤال" />
           </div>
