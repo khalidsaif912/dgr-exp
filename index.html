@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#070B14"/>
+<meta name="description" content="ألعاب ذاكرة وتدريب DGR — مطابقة، تشابه، اختبار، وAir Logo"/>
+<title>ألعاب الذاكرة - الصفحة الرئيسية</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
+<link rel="prefetch" href="/games.json"/>
+
+<style>
+:root{
+  --bg0:#070B14; --bg1:#0B1220;
+  --stroke:rgba(255,255,255,.12);
+  --text:#EEF3FF;
+  --muted:rgba(238,243,255,.72);
+  --shadow:0 18px 55px rgba(0,0,0,.45);
+  --accent:#4facfe;
+  --accent2:#00f2fe;
+}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial}
+html,body{height:100%;margin:0}
+body{
+  color:var(--text);
+  background:
+    radial-gradient(920px 520px at 12% 8%, rgba(79,172,254,.14), transparent 58%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+}
+
+.topbar{
+  position:fixed;left:14px;right:14px;top:14px;z-index:20;
+  height:62px;border-radius:26px;border:1px solid var(--stroke);
+  background:linear-gradient(180deg, rgba(18,28,48,.94), rgba(8,14,26,.88));
+  box-shadow:0 14px 40px rgba(0,0,0,.40);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;
+}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand .appname{font-size:12px;color:var(--muted)}
+.brand .title{font-size:16px;font-weight:900;letter-spacing:.2px}
+.iconBtn{
+  width:44px;height:44px;border-radius:16px;
+  border:1px solid var(--stroke);background:rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;text-decoration:none;font-size:22px;
+  transition:transform .12s ease, background .12s ease;
+  -webkit-tap-highlight-color:transparent;color:var(--text);
+}
+.iconBtn:hover{background:rgba(255,255,255,.08)}
+.iconBtn:active{transform:scale(.97)}
+
+.container{
+  min-height:100vh;
+  padding:98px 18px 28px 18px;
+  display:flex;align-items:flex-start;justify-content:center;
+}
+.shell{width:min(920px,100%)}
+
+.heroCard{
+  border-radius:32px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(180deg, rgba(18,28,48,.94), rgba(8,14,26,.88));
+  box-shadow:var(--shadow);
+  padding:26px 22px 22px;
+  margin-bottom:18px;
+}
+.hero{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:16px;
+  align-items:center;
+}
+.hero .h{
+  margin:0;
+  font-size:clamp(24px,4vw,32px);
+  font-weight:950;
+  line-height:1.25;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .sub{
+  margin:10px 0 0 0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.75;
+  max-width:52ch;
+}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.badge{
+  font-size:12px;font-weight:700;
+  padding:6px 12px;border-radius:999px;
+  border:1px solid rgba(79,172,254,.35);
+  background:rgba(79,172,254,.10);
+  color:#b8e4ff;
+}
+.badge.muted{
+  border-color:var(--stroke);
+  background:rgba(255,255,255,.04);
+  color:var(--muted);
+  font-weight:600;
+}
+.heroMark{
+  width:72px;height:72px;border-radius:22px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;
+  border:1px solid rgba(79,172,254,.35);
+  background:linear-gradient(145deg, rgba(79,172,254,.18), rgba(0,242,254,.08));
+  box-shadow:0 12px 32px rgba(0,0,0,.35);
+}
+
+.sectionTitle{
+  margin:0 0 12px 0;
+  font-size:15px;font-weight:800;color:var(--muted);
+  letter-spacing:.02em;
+}
+
+.games-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+}
+.game-item{
+  padding:18px 16px;
+  border-radius:22px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.03);
+  transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  text-decoration:none;color:var(--text);
+  display:flex;flex-direction:column;gap:8px;
+  min-height:118px;
+}
+.game-item:hover{background:rgba(255,255,255,.06);transform:translateY(-2px)}
+.game-item .row{display:flex;align-items:center;gap:10px}
+.game-item .emoji{font-size:32px;line-height:1}
+.game-item .name{font-size:15px;font-weight:900}
+.game-item .status{font-size:12px;color:var(--muted);line-height:1.5}
+.game-item.available{
+  background:linear-gradient(180deg, rgba(79,172,254,.12), rgba(255,255,255,.02));
+  border-color:rgba(79,172,254,.32);
+}
+.game-item.available .status{color:var(--accent)}
+.game-item.available::after{
+  content:"العب الآن ←";
+  margin-top:auto;
+  font-size:12px;font-weight:800;
+  color:var(--accent2);
+}
+.game-item.soon{opacity:.58;cursor:not-allowed}
+.game-item.soon:hover{transform:none}
+
+.note{
+  margin-top:16px;
+  padding:14px 16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--stroke);
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.modal{
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  z-index:90;padding:16px;background:rgba(0,0,0,.55);
+}
+.modal.show{display:flex}
+.cardModal{
+  width:min(640px,94vw);border-radius:24px;border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(180deg, rgba(18,28,48,.96), rgba(8,14,26,.92));
+  box-shadow:var(--shadow);padding:16px;
+}
+.modalHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.modalHeader h2{margin:0;font-size:16px}
+.xbtn{
+  border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);
+  color:var(--text);border-radius:16px;padding:8px 12px;cursor:pointer;
+}
+.pill{
+  height:42px;border-radius:16px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;font-size:18px;color:var(--text);
+}
+.pill.active{box-shadow:0 0 0 2px rgba(79,172,254,.35) inset}
+.small{color:var(--muted);font-size:13px}
+
+@media (max-width:600px){
+  .hero{grid-template-columns:1fr;gap:12px}
+  .heroMark{width:64px;height:64px;font-size:32px}
+  .games-grid{grid-template-columns:1fr;gap:12px}
+}
+@media (prefers-reduced-motion: reduce){
+  .game-item,.iconBtn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="appname">روستر · DGR</div>
+    <div class="title">ألعاب الذاكرة</div>
+  </div>
+  <button class="iconBtn" id="gamesBtn" title="قائمة الألعاب" type="button">🎮</button>
+</div>
+
+<div class="container">
+  <div class="shell">
+    <div class="heroCard">
+      <div class="hero">
+        <div>
+          <h1 class="h">درّب ذاكرتك بسرعة</h1>
+          <p class="sub">ألعاب خفيفة للمتصفح — بدون تثبيت. اختر لعبة من الأسفل أو من زر 🎮 في أي وقت.</p>
+          <div class="badges">
+            <span class="badge">٤ ألعاب جاهزة</span>
+            <span class="badge muted">سجل عالمي 🏆</span>
+            <span class="badge muted">واجهة محسّنة · تحميل أسرع</span>
+          </div>
+        </div>
+        <div class="heroMark" aria-hidden="true">🧠</div>
+      </div>
+    </div>
+
+    <p class="sectionTitle">الألعاب</p>
+    <div class="games-grid" id="homeGamesGrid"></div>
+
+    <div class="note">
+      💡 داخل كل لعبة يوجد زر <strong>🎮</strong> واحد لنفس قائمة الألعاب. الخلفيات والصور تُحمَّل من شبكة CDN أسرع — الزيارة الثانية أسرع بفضل تخزين المتصفح.
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="gamesModal" role="dialog" aria-modal="true" aria-labelledby="gamesModalTitle">
+  <div class="cardModal">
+    <div class="modalHeader">
+      <h2 id="gamesModalTitle">🎮 قائمة الألعاب</h2>
+      <button class="xbtn" id="closeGames" type="button">إغلاق</button>
+    </div>
+    <div id="gamesList" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px"></div>
+    <div class="small" style="margin-top:10px">⚡ القائمة من <code>games.json</code></div>
+  </div>
+</div>
+
+<script>
+const gamesBtn = document.getElementById("gamesBtn");
+const gamesModal = document.getElementById("gamesModal");
+const closeGames = document.getElementById("closeGames");
+
+const GAMES_JSON_URL = "/games.json";
+function toRootHref(href){
+  if(!href || href==="#") return "#";
+  if(/^https?:\/\//i.test(href)) return href;
+  if(href.startsWith("/")) return href;
+  return "/" + String(href).replace(/^\.?\//,"");
+}
+
+const CURRENT_GAME_ID = "home";
+
+function escHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+async function fetchGames(){
+  const res = await fetch(GAMES_JSON_URL, {cache:"default"});
+  if(!res.ok) throw new Error("fetch failed: "+res.status);
+  const data = await res.json();
+  return Array.isArray(data?.games) ? data.games : [];
+}
+
+async function renderGamesMenu(){
+  const box = document.getElementById("gamesList");
+  if(!box) return;
+  box.innerHTML = '<div class="small">جاري تحميل القائمة...</div>';
+  try{
+    const games = await fetchGames();
+    if(!games.length) throw new Error("games.json فارغ");
+    box.innerHTML = "";
+    games.forEach(g=>{
+      const id = String(g.id||"");
+      const name = String(g.name||"لعبة");
+      const icon = String(g.icon||"🎮");
+      const note = String(g.note||"");
+      const href = String(g.href||"#");
+      const status = String(g.status||"soon");
+      const isHere = (CURRENT_GAME_ID && id===CURRENT_GAME_ID);
+      const isLive = status==="live" && href && href!=="#";
+      if(isHere){
+        box.insertAdjacentHTML("beforeend", `
+          <div class="pill active" style="height:60px;flex-direction:column;gap:4px">
+            <div>${escHtml(icon)} ${escHtml(name)}</div>
+            <small style="font-size:11px;color:var(--muted)">أنت هنا</small>
+          </div>
+        `);
+      } else if(isLive){
+        box.insertAdjacentHTML("beforeend", `
+          <a class="pill" href="${escHtml(toRootHref(href))}" style="height:60px;flex-direction:column;gap:4px">
+            <div>${escHtml(icon)} ${escHtml(name)}</div>
+            <small style="font-size:11px;color:var(--muted)">${escHtml(note)}</small>
+          </a>
+        `);
+      } else {
+        box.insertAdjacentHTML("beforeend", `
+          <div class="pill" style="height:60px;flex-direction:column;gap:4px;opacity:.55;cursor:not-allowed">
+            <div>${escHtml(icon)} ${escHtml(name)}</div>
+            <small style="font-size:11px;color:var(--muted)">قريباً</small>
+          </div>
+        `);
+      }
+    });
+  }catch(e){
+    console.warn("games menu load failed", e);
+    box.innerHTML = '<div class="small">تعذر تحميل قائمة الألعاب</div>';
+  }
+}
+
+async function renderHomeGrid(){
+  const host = document.getElementById("homeGamesGrid");
+  if(!host) return;
+  host.innerHTML = '<div class="small">جاري تحميل الألعاب...</div>';
+  try{
+    const games = await fetchGames();
+    host.innerHTML = "";
+    games.forEach(g=>{
+      const name = String(g.name||"لعبة");
+      const icon = String(g.icon||"🎮");
+      const note = String(g.note||"");
+      const href = String(g.href||"#");
+      const status = String(g.status||"soon");
+      const isLive = status==="live" && href && href!=="#";
+      if(isLive){
+        host.insertAdjacentHTML("beforeend", `
+          <a class="game-item available" href="${escHtml(toRootHref(href))}">
+            <div class="row"><span class="emoji">${escHtml(icon)}</span><span class="name">${escHtml(name)}</span></div>
+            <span class="status">${escHtml(note)}</span>
+          </a>
+        `);
+      }else{
+        host.insertAdjacentHTML("beforeend", `
+          <div class="game-item soon">
+            <div class="row"><span class="emoji">${escHtml(icon)}</span><span class="name">${escHtml(name)}</span></div>
+            <span class="status">قريباً · ${escHtml(note)}</span>
+          </div>
+        `);
+      }
+    });
+  }catch(e){
+    console.warn("home grid load failed", e);
+    host.innerHTML = '<div class="small">تعذر تحميل قائمة الألعاب</div>';
+  }
+}
+
+function openGames(){
+  renderGamesMenu();
+  gamesModal.classList.add("show");
+}
+function closeGamesModal(){ gamesModal.classList.remove("show"); }
+
+gamesBtn.addEventListener("click", openGames);
+closeGames.addEventListener("click", closeGamesModal);
+gamesModal.addEventListener("click", (e)=>{ if(e.target===gamesModal) closeGamesModal(); });
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  renderHomeGrid();
+});
+</script>
+
+</body>
+</html>

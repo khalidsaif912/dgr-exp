@@ -1,0 +1,1747 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#070B14" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<title>🎯 كود الملصق</title>
+
+<style>
+  :root{
+    --bg0:#070B14; --bg1:#0B1220;
+    --stroke:rgba(255,255,255,.12);
+    --text:#EEF3FF;
+    --muted:rgba(238,243,255,.72);
+    --shadow:0 18px 55px rgba(0,0,0,.45);
+    --accentA: rgba(79,172,254,.95);
+    --accentB: rgba(0,242,254,.90);
+  }
+  *{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial}
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+  color:var(--text);
+  background:
+    radial-gradient(920px 520px at 12% 8%, rgba(79,172,254,.14), transparent 58%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+}
+  
+  .layout{
+    position:fixed; inset:0;
+    display:grid;
+    grid-template-columns:260px 1fr;
+  }
+  aside.sidebar{padding:14px}
+  .sbox{
+    height:100%;
+    border-radius:28px;
+    border:1px solid var(--stroke);
+    background:linear-gradient(180deg, rgba(18,28,48,.94), rgba(8,14,26,.88));
+    box-shadow:var(--shadow);
+    
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .brand{
+    display:flex;flex-direction:column;gap:4px;padding:10px 12px;
+    border-radius:20px;border:1px solid rgba(255,255,255,.10);
+    background:rgba(5,10,20,.35);
+  }
+  .brand .appname{font-size:12px;color:var(--muted)}
+  .brand .title2{font-size:16px;font-weight:950;letter-spacing:.2px}
+
+  .row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+  .iconBtn{
+    width:44px;height:44px;border-radius:16px;
+    border:1px solid var(--stroke);
+    background:rgba(255,255,255,.05);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;text-decoration:none;font-size:22px;color:var(--text);
+    transition:transform .12s ease;
+  }
+  .iconBtn:hover{background:rgba(255,255,255,.07)}
+  .iconBtn:active{transform:scale(.97)}
+
+  .charPanel{
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(5,10,20,.35);
+    overflow:hidden;
+    position:relative;
+    height:280px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .charPanel::before{
+    content:"";
+    position:absolute; inset:-2px;
+    background:radial-gradient(400px 240px at 50% 40%, rgba(79,172,254,.22), transparent 65%),
+               radial-gradient(380px 240px at 40% 70%, rgba(0,242,254,.14), transparent 65%);
+    pointer-events:none;
+  }
+  .charPanel img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:3px;
+    display:block;
+    position:relative;
+    z-index:1;
+    filter: drop-shadow(0 14px 30px rgba(0,0,0,.35));
+    transition: opacity .18s ease;
+  }
+
+  .sideStat{
+    padding:14px;border-radius:22px;border:1px solid rgba(255,255,255,.10);
+    background:rgba(5,10,20,.35);
+  }
+  .sideStat .lbl{font-size:12px;color:var(--muted);margin-bottom:8px}
+  .sideStat .val{
+    font-variant-numeric:tabular-nums;
+    font-size:46px;font-weight:950;
+    letter-spacing:1px;text-align:center;padding:10px;
+    border-radius:18px;border:1px solid var(--stroke);
+    background:rgba(255,255,255,.04);
+  }
+  .sideStat .val.pulse{animation:glow 1.05s ease-in-out infinite}
+  @keyframes glow{0%,100%{text-shadow:0 0 0 rgba(79,172,254,0)}50%{text-shadow:0 0 22px rgba(79,172,254,.55)}}
+  .kvSide{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .kvSide span{font-size:12px;color:var(--muted)}
+  .kvSide strong{font-size:18px}
+
+  .actionsSide{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .act{
+    height:46px;border-radius:16px;border:1px solid var(--stroke);
+    background:rgba(255,255,255,.05);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:22px;
+  }
+  .act:active{transform:scale(.98)}
+  .spacer{flex:1}
+  .note{font-size:12px;color:var(--muted);text-align:center;padding:8px 6px}
+
+  main{
+    padding:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    overflow:hidden;
+  }
+
+  .card{
+    width:min(980px, 96vw);
+    height: min(820px, calc(100vh - 28px));
+    border:1px solid var(--stroke);
+    border-radius:26px;
+    background:linear-gradient(180deg, rgba(18,28,48,.94), rgba(8,14,26,.88));
+    box-shadow:var(--shadow);
+    
+    padding:14px;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .muted{color:var(--muted); font-size:13px}
+
+  .topbar{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .title{font-weight:950; letter-spacing:.2px; font-size:18px; white-space:nowrap;}
+  .topRight{display:flex; align-items:center; gap:10px; justify-content:flex-end;}
+  .pill{
+    border:1px solid var(--stroke);
+    background:rgba(255,255,255,.05);
+    border-radius:18px;
+    padding:10px 12px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .kv{display:flex; gap:10px; align-items:center; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .kv b{font-size:18px}
+
+  .infoBtn{
+    width:40px;height:40px;border-radius:14px;
+    border:1px solid var(--stroke);
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:950;font-size:18px;line-height:1;
+  }
+
+  .moreBtn{display:none;font-weight:900;font-size:20px}
+  @media (max-width:700px){
+    .moreBtn{display:flex}
+  }
+
+  /* صور القائمة الجانبية */
+  .sideAds{
+    margin-top:12px;
+    display:grid;
+    gap:10px;
+  }
+  .sideAd{
+    display:block;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid var(--stroke);
+    background:rgba(255,255,255,.04);
+    box-shadow:0 10px 24px rgba(0,0,0,.25);
+  }
+  .sideAd img{
+    width:100%;
+    height:auto;
+    max-height:180px;
+    object-fit:contain;
+    display:block;
+  }
+
+  /* نافذة "المزيد" */
+  .linksGrid{
+    display:grid;
+    gap:10px;
+    margin-top:10px;
+  }
+  .linkCard{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 14px;
+    border-radius:18px;
+    border:1px solid var(--stroke);
+    background:rgba(255,255,255,.05);
+    cursor:pointer;
+    text-decoration:none;
+    color:var(--text);
+  }
+  .linkLeft{display:flex;align-items:center;gap:12px;min-width:0}
+  .linkIco{
+    width:38px;height:38px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(79,172,254,.14);
+    border:1px solid rgba(79,172,254,.25);
+    flex:0 0 auto;
+    font-size:20px;
+  }
+  .linkTxt{min-width:0}
+  .linkTxt b{display:block;font-size:14px}
+  .linkTxt span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr}
+  .linkGo{opacity:.8;font-size:18px;flex:0 0 auto}
+  .linkCard:hover{background:rgba(255,255,255,.08)}
+
+
+  .content{flex:1; display:flex; flex-direction:column; gap:10px; min-height:0;}
+  .panel{
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(5,10,20,.35);
+    border-radius:22px;
+    padding:12px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .qImgWrap{
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    min-height: 240px;
+  }
+  .qImgWrap img{
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: clamp(300px, 45vh, 520px);
+    object-fit: contain;
+    border-radius: 22px;
+    border: 3px solid rgba(255,255,255,.35);
+    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    display:block;
+  }
+
+  .timerRow{display:flex; align-items:center; gap:10px; justify-content:center;}
+  .timeNum{width:34px; text-align:center; font-weight:950; font-size:18px; font-variant-numeric:tabular-nums;}
+  .tbar{
+    width:520px; max-width:80vw; height:16px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.05);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset, 0 10px 28px rgba(0,0,0,.35);
+  }
+  .tfill{
+    height:100%; width:100%;
+    border-radius:999px;
+    position:relative;
+    background: linear-gradient(90deg, var(--accentA), var(--accentB));
+    box-shadow: 0 0 18px rgba(79,172,254,.45), 0 0 32px rgba(0,242,254,.25);
+    transition: width .10s linear, filter .15s ease;
+  }
+  .tfill::after{
+    content:""; position:absolute; inset:-40% -30%;
+    background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.22) 35%, transparent 65%);
+    transform: translateX(-70%) rotate(10deg);
+    animation: sheen 1.25s ease-in-out infinite;
+    opacity:.55; pointer-events:none;
+  }
+  @keyframes sheen{0%{transform:translateX(-70%) rotate(10deg)}100%{transform:translateX(70%) rotate(10deg)}}
+  .tfill.pulse{animation:pulseGlow .95s ease-in-out infinite;}
+  @keyframes pulseGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+  .tfill.ok{background:linear-gradient(90deg, rgba(79,172,254,.95), rgba(0,242,254,.90));}
+  .tfill.warn{background:linear-gradient(90deg, rgba(241,196,15,.95), rgba(230,126,34,.92));}
+  .tfill.danger{background:linear-gradient(90deg, rgba(231,76,60,.98), rgba(155,89,182,.90));}
+
+  .grid{display:grid; grid-template-columns:repeat(6,1fr); gap:10px;}
+  /* تعطيل الإجابات عند انتهاء الوقت/نهاية الجولة */
+  #optsGrid.disabled{pointer-events:none;}
+  #optsGrid.disabled .optBtn{opacity:.65; filter:saturate(.75);}
+  .optBtn{
+    border-radius:18px; border:1px solid var(--stroke);
+    background:rgba(255,255,255,.04);
+    cursor:pointer; overflow:hidden;
+    transition: transform .08s ease, border-color .12s ease, box-shadow .12s ease;
+    aspect-ratio:1/1;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .optBtn:active{transform:scale(.98)}
+  .optBtn img{width:100%;height:100%;object-fit:contain;padding:10px;display:block;}
+  .optBtn.good{border-color:rgba(46,204,113,.55); box-shadow:0 0 0 2px rgba(46,204,113,.18) inset;}
+  .optBtn.bad{border-color:rgba(231,76,60,.65); box-shadow:0 0 0 2px rgba(231,76,60,.22) inset;}
+
+  .bottomBar{
+    border-top:1px solid rgba(255,255,255,.10);
+    padding-top:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; width:100%;}
+  .btn{
+    border-radius:16px;
+    border:1px solid var(--stroke);
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    padding:10px 12px;
+    cursor:pointer;
+  }
+  .btn.primary{background:rgba(79,172,254,.18);}
+
+  .modal{
+    position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+    z-index:90;padding:16px;background:rgba(0,0,0,.55);
+  }
+  .modal.show{display:flex}
+  .cardModal{
+    width:min(680px,94vw);border-radius:24px;border:1px solid rgba(255,255,255,.14);
+    background:linear-gradient(180deg, rgba(18,28,48,.94), rgba(8,14,26,.88));
+    box-shadow:var(--shadow);padding:16px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+  .modalHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .modalHeader h2{margin:0;font-size:16px}
+  .xbtn{
+    border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);
+    color:var(--text);border-radius:16px;padding:8px 12px;cursor:pointer;
+  }
+  .small{color:var(--muted);font-size:16px}
+  .inputRow{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
+  .inputRow input{
+    flex:1;min-width:160px;border-radius:16px;border:1px solid var(--stroke);
+    background:rgba(5,10,20,.35);color:var(--text);padding:12px 14px;
+    font-size:14px;outline:none;
+  }
+  .primary{
+    border-radius:16px;border:1px solid var(--stroke);
+    background:rgba(79,172,254,.18);color:var(--text);
+    padding:12px 14px;cursor:pointer;white-space:nowrap;
+  }
+  .table{
+    width:100%;border-collapse:collapse;font-size:13px;
+    overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.10);
+  }
+  .table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center}
+  .table th{color:var(--muted);font-weight:700}
+
+  .countdownOverlay{
+    position:fixed; inset:0;
+    display:none; /* تم إلغاء العد التنازلي */
+    align-items:center; justify-content:center;
+    z-index:120;
+    background: radial-gradient(800px 500px at 50% 50%, rgba(0,0,0,.35), rgba(0,0,0,.65));
+    
+  }
+  .countdownOverlay.show{ display:flex; }
+  .countdownBubble{
+    width:min(240px, 70vw);
+    aspect-ratio:1/1;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.16);
+    background: linear-gradient(180deg, rgba(18,28,48,.94), rgba(8,14,26,.88));
+    box-shadow: 0 24px 70px rgba(0,0,0,.55);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:950;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(56px, 14vw, 96px);
+    letter-spacing:.5px;
+    position:relative;
+    overflow:hidden;
+  }
+  .countdownBubble::before{
+    content:"";
+    position:absolute; inset:-50%;
+    background: conic-gradient(from 180deg,
+      rgba(79,172,254,.00),
+      rgba(79,172,254,.45),
+      rgba(0,242,254,.45),
+      rgba(46,204,113,.35),
+      rgba(79,172,254,.00)
+    );
+    animation: spin 1.2s linear infinite;
+    opacity:.65;
+  }
+  .countdownNum{
+    position:relative;
+    z-index:1;
+    text-shadow: 0 10px 30px rgba(0,0,0,.6);
+  }
+  @keyframes spin{ to{ transform: rotate(360deg);} }
+
+  #preloadModal .cardModal{
+    width:min(320px, 88vw);
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.14);
+    background:linear-gradient(180deg, rgba(18,28,48,.94), rgba(8,14,26,.88));
+    box-shadow:var(--shadow);
+    
+    padding:16px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:stretch;
+  }
+  #preloadModal .modalHeader{margin-bottom:0}
+  #preloadModal .modalHeader h2{font-size:16px;margin:0}
+  #preloadModal .loaderRow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-top:2px;
+  }
+  #preloadModal .spinner{
+    width:26px;height:26px;
+    border-radius:999px;
+    border:3px solid rgba(255,255,255,.18);
+    border-top-color: rgba(79,172,254,.95);
+    animation: spin 1s linear infinite;
+  }
+  #preloadModal .tbar{height:10px}
+  /* لا أزرار في نافذة التحميل */
+  #preloadModal .preBtns{display:none !important;}
+  #preloadModal #startBtn, 
+  #preloadModal #backBtn{display:none !important;}
+
+  .gameTile{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    padding:10px;
+  }
+  .gameTile .gIcon{
+    width:100%;
+    aspect-ratio:1/1;
+    border-radius:18px;
+    border:1px solid var(--stroke);
+    background:rgba(255,255,255,.04);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+    overflow:hidden;
+  }
+  .gameTile .gIcon img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:12px;
+    display:block;
+  }
+  .gameTile .gName{
+    font-size:12px;
+    color:var(--muted);
+    text-align:center;
+    line-height:1.25;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  @media (max-width: 820px){
+    .layout{grid-template-columns:1fr}
+    aside.sidebar{display:none}
+    .grid{grid-template-columns:repeat(3,1fr)}
+    .qImgWrap img{max-height: clamp(240px, 40vh, 420px);}
+  }
+  @media (max-width: 520px){
+    /* تحسين العرض على الشاشات الصغيرة */
+    .qImgWrap{padding:8px; margin-bottom:12px;}
+    .qImgWrap img{width:100%; height:auto; max-height:32vh;}
+    .timerRow{margin-top:10px; gap:8px;}
+    .timeNum{font-size:16px; width:32px;}
+  }
+  @media (max-width: 420px){
+    .title{font-size:16px}
+  }
+
+  /* ===== إعلان (mubher.png) ===== */
+  .adWrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    padding-top:10px;
+  }
+  .adWrap a{
+    display:block;
+    width:min(520px, 92vw);
+    text-decoration:none;
+    border-radius:18px;
+    overflow:hidden;
+  }
+  .adWrap img{
+    width:100%;
+    height:auto;
+    display:block;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow: 0 16px 40px rgba(0,0,0,.35);
+  }
+  .adWrap a:active{transform:scale(.99)}
+
+
+
+
+/* إظهار أيقونة المزيد في جميع الشاشات */
+.moreBtn{
+  display:flex !important;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sbox">
+      <div class="brand">
+        <div class="appname">روستر - ألعاب الصور</div>
+        <div class="title2">🎯 كود الملصق</div>
+      </div>
+
+      <div class="row">
+        <a class="iconBtn" href="/" title="العودة">🏠</a>
+        <button class="iconBtn" id="sideGames" title="الألعاب الأخرى">🎮</button>
+      </div>
+
+      <aside class="charPanel" aria-label="الشخصيات">
+        <img id="charImg" alt="شخصية" />
+      </aside>
+
+      <div class="sideStat">
+        <div class="lbl">الوقت</div>
+        <div class="val pulse" id="timeSide">30</div>
+        <div class="kvSide"><span>النقاط</span><strong id="scoreSide">0</strong></div>
+      </div>
+
+      <div class="actionsSide">
+        <div class="act" id="sideSound" title="الصوت">🔊</div>
+        <div class="act" id="sideRestart" title="إعادة">🔄</div>
+        <div class="act" id="sideTrophy" title="السجل">🏆</div>
+        <div class="act" id="sideHome" title="الصفحة الرئيسية">🏠</div>
+      </div>
+
+      <!-- صور/إعلانات في القائمة الجانبية -->
+      <div class="sideAds" id="sideAds">
+        <a class="sideAd" href="https://mystore-96d8e.web.app/?tab=new" target="_blank" rel="noopener" aria-label="متجر مبهر">
+          <img src="mubher.png" alt="متجر مبهر" loading="eager" />
+        </a>
+      </div>
+
+
+      <div class="spacer"></div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="card">
+      <div class="topbar">
+        <div class="title">🎯 كود الملصق</div>
+        <div class="topRight">
+          <div class="pill kv">
+            <span class="muted">النقاط</span>
+            <b id="scoreTxt">0</b>
+          </div>
+          <button class="infoBtn" id="btnInfo" title="طريقة اللعب">!</button>
+          <button class="infoBtn moreBtn" id="btnMore" title="المزيد">⋯</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="panel" style="flex:1; min-height:0;">
+          <div class="qImgWrap">
+            <img id="qImg" alt="السؤال" />
+          </div>
+
+          <div class="timerRow" aria-label="الوقت">
+            <div class="timeNum" id="timeTxt">30</div>
+            <div class="tbar">
+              <div class="tfill ok pulse" id="tFill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="grid" id="optsGrid"></div>
+        </div>
+      </div>
+
+
+      <div class="bottomBar">
+        <div class="controls">
+          <button class="btn" id="btnSound" title="كتم الصوت">🔊</button>
+          <button class="btn primary" id="btnRestart" title="إعادة">🔄 إعادة</button>
+          <button class="btn" id="btnTrophy" title="السجل العالمي">🏆</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- نهاية اللعبة -->
+<div class="modal" id="endModal">
+  <div class="cardModal">
+    <div class="modalHeader">
+      <h2>⏰ انتهى الوقت!</h2>
+      <button class="xbtn" id="endClose">إغلاق</button>
+    </div>
+    <div class="small">صحيح / خطأ يظهر هنا بعد انتهاء اللعبة</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0">
+      <div class="pill kv" style="flex:1;min-width:160px;justify-content:space-between">
+        <span class="muted">النقاط</span><b id="endScore">0</b>
+      </div>
+      <div class="pill kv" style="flex:1;min-width:160px;justify-content:space-between">
+        <span class="muted">النتائج</span><b>صحيح: <span id="endCorrect">0</span> – خطأ: <span id="endWrong">0</span></b>
+      </div>
+    </div>
+
+    <div style="margin:12px 0; border-top:1px solid rgba(255,255,255,.10); padding-top:12px">
+      <div class="small" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <span>🏆 السجل العالمي</span>
+        <span>ترتيبك الحالي: <b id="endRank">—</b></span>
+      </div>
+
+      <div class="inputRow" style="margin-top:10px">
+        <input id="endPlayerName" placeholder="اكتب اسمك (اختياري)"/>
+        <button class="primary" id="endSaveBtn">حفظ نتيجتي</button>
+      </div>
+
+      <div class="small" id="endBoardStatus" style="margin-bottom:8px">جاهز</div>
+      <table class="table">
+        <thead><tr><th>#</th><th>الاسم</th><th>النقاط</th><th>صحيح</th><th>خطأ</th></tr></thead>
+        <tbody id="endBoardBody"><tr><td colspan="5" class="small">لم يتم التحميل بعد</td></tr></tbody>
+      </table>
+
+      <div class="small" style="margin-top:10px">الترتيب: أعلى نقاط ثم أقل أخطاء</div>
+    </div>
+
+    <div class="inputRow" style="margin-top:0">
+      <button class="primary" id="endRestart">🔄 العب مرة أخرى</button>
+    </div>
+  </div>
+</div>
+
+<!-- Leaderboard Modal -->
+<div class="modal" id="boardModal">
+  <div class="cardModal">
+    <div class="modalHeader">
+      <h2>🏆 أفضل النتائج (عالمي)</h2>
+      <button class="xbtn" id="closeBoard">إغلاق</button>
+    </div>
+    <div class="small" id="boardStatus">جاهز</div>
+    <div class="inputRow">
+      <input id="playerName" placeholder="اكتب اسمك (اختياري)"/>
+      <button class="primary" id="saveBtn">حفظ نتيجتي</button>
+    </div>
+    <table class="table">
+      <thead><tr><th>#</th><th>الاسم</th><th>النقاط</th><th>صحيح</th><th>خطأ</th></tr></thead>
+      <tbody id="boardBody"><tr><td colspan="5" class="small">لم يتم التحميل بعد</td></tr></tbody>
+    </table>
+    <div class="small" style="margin-top:10px">الترتيب: أعلى نقاط ثم أقل أخطاء</div>
+  </div>
+</div>
+
+<!-- طريقة اللعب -->
+<!-- طريقة اللعب -->
+<div class="modal" id="infoModal">
+  <div class="cardModal">
+    <div class="modalHeader">
+      <h2>🎯 طريقة اللعب</h2>
+      <button class="xbtn" id="infoClose">إغلاق</button>
+    </div>
+    <div class="small" style="line-height:1.8;">
+      تظهر لك صورة ملصق للمواد الخطرة، اختر الرمز الصحيح الدال عليها من بين 6 خيارات.<br><br>
+      
+      <b>⏱️ الوقت:</b> لديك 30 ثانية لحل أكبر عدد ممكن من الأسئلة. يبدأ العد التنازلي عند أول إجابة لك.<br><br>
+      
+      <b>❌ الإجابة الخاطئة:</b> تخصم 4 ثوان من الوقت المتبقي.<br><br>
+      
+      <b>⚡ نظام النقاط:</b><br>
+      • الإجابة السريعة تمنحك نقاطاً أعلى<br>
+      • مكافأة +30 نقطة للإجابة خلال ثانيتين<br>
+      • الإجابات الصحيحة المتتالية تزيد النقاط<br><br>
+      
+      <b>🏆 الهدف:</b> اجمع أكبر عدد من النقاط وسجل اسمك في قائمة المتصدرين!
+    </div>
+  </div>
+</div>
+
+<!-- شاشة تحميل الصور (Preload) -->
+<div class="modal show" id="preloadModal" aria-live="polite">
+  <div class="cardModal">
+    <div class="modalHeader">
+      <h2>⬇️ جاري تجهيز اللعبة…</h2>
+    </div>
+    <div class="loaderRow" aria-hidden="true"><div class="spinner"></div></div>
+    <div class="small" id="preloadStatus">يتم الآن تحميل الصور إلى المتصفح</div>
+
+    <div style="margin:12px 0">
+      <div class="tbar" style="width:100%;max-width:100%">
+        <div class="tfill ok" id="preloadFill" style="width:0%"></div>
+      </div>
+      <div class="small" style="margin-top:8px;text-align:center;font-variant-numeric:tabular-nums">
+        <span id="preloadPct">0%</span>
+        — <span id="preloadCount">0/0</span>
+      </div>
+    </div>
+
+    <div class="preBtns" style="margin-top:6px">
+      <button class="btn smallBack" id="backBtn" title="رجوع">↩️ رجوع</button>
+      <button class="primary" id="startBtn" disabled>ابدأ</button>
+    </div>
+
+    <div class="small">ملاحظة: بعد التحميل ستعمل اللعبة بسلاسة حتى مع الإنترنت البطيء.</div>
+  </div>
+</div>
+
+<!-- Countdown Overlay -->
+<div class="countdownOverlay" id="countdownOverlay" aria-live="polite" aria-label="العد التنازلي">
+  <div class="countdownBubble">
+    <div class="countdownNum" id="countdownNum">3</div>
+  </div>
+</div>
+
+<!-- Games Modal -->
+<div class="modal" id="gamesModal">
+  <div class="cardModal">
+    <div class="modalHeader">
+      <h2>🎮 ألعاب أخرى</h2>
+      <button class="xbtn" id="gamesClose">إغلاق</button>
+    </div>
+    <div class="small" id="gamesStatus" style="margin-bottom:10px">جاهز</div>
+    <div class="grid" id="gamesGrid" style="grid-template-columns:repeat(4,1fr)"></div>
+  </div>
+</div>
+
+
+<!-- نافذة المزيد (للشاشات الصغيرة) -->
+<div class="modal" id="moreModal">
+  <div class="cardModal">
+    <div class="modalHeader">
+      <h2>✨ مواقع مهمة</h2>
+      <button class="xbtn" id="moreClose">إغلاق</button>
+    </div>
+    <div class="small">اختر موقعًا للفتح في نافذة جديدة.</div>
+
+    <div class="linksGrid">
+      <a class="linkCard" href="https://mystore-96d8e.web.app" target="_blank" rel="noopener">
+        <div class="linkLeft">
+          <div class="linkIco">🛍️</div>
+          <div class="linkTxt">
+            <b>متجر مبهر</b>
+            <span>mystore-96d8e.web.app</span>
+          </div>
+        </div>
+        <div class="linkGo">↗</div>
+      </a>
+
+      <a class="linkCard" href="https://new-roster.netlify.app" target="_blank" rel="noopener">
+        <div class="linkLeft">
+          <div class="linkIco">🗓️</div>
+          <div class="linkTxt">
+            <b>موقع الروستر</b>
+            <span>new-roster.netlify.app</span>
+          </div>
+        </div>
+        <div class="linkGo">↗</div>
+      </a>
+
+      <a class="linkCard" href="https://iammrk-8af39.web.app" target="_blank" rel="noopener">
+        <div class="linkLeft">
+          <div class="linkIco">📁</div>
+          <div class="linkTxt">
+            <b>موقعي (مشاريعي)</b>
+            <span>iammrk-8af39.web.app</span>
+          </div>
+        </div>
+        <div class="linkGo">↗</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ================== إعدادات GitHub ================== */
+const REPO_OWNER = "khalidsaif912";
+const REPO_NAME  = "Games";
+const REPO_BRANCH = "main";
+const FOLDER_PATH = "M1";
+const CDN_BASE = "https://cdn.jsdelivr.net/gh/khalidsaif912/Games@main/M1/";
+
+async function loadM1PairsFromManifest(){
+  const res = await fetch(CDN_BASE + "manifest.json", { cache: "default" });
+  if(!res.ok) throw new Error("تعذر قراءة manifest.json: " + res.status);
+  const data = await res.json();
+  const list = Array.isArray(data?.pairs) ? data.pairs : [];
+  if(list.length < 2) throw new Error("manifest.json: أزواج غير كافية");
+  const out = [];
+  const answers = [];
+  for(const p of list){
+    const id = String(p.id || "");
+    const a1 = CDN_BASE + String(p.img1 || "");
+    const a2 = CDN_BASE + String(p.img2 || "");
+    if(!p.img1 || !p.img2) continue;
+    answers.push({ base: id, url: a1 });
+    out.push({ base: id, a1Url: a1, q2Url: a2 });
+  }
+  if(out.length < 2) throw new Error("لا توجد أزواج كافية في manifest.");
+  if(answers.length < 6) throw new Error("لا توجد إجابات كافية لعرض 6 خيارات.");
+  pairs = shuffle(out.slice());
+  a1Pool = answers.slice();
+}
+
+async function fetchCharactersFromManifest(){
+  const res = await fetch(CDN_BASE + "characters/manifest.json", { cache: "default" });
+  if(!res.ok) throw new Error("تعذر قراءة شخصيات manifest: " + res.status);
+  const data = await res.json();
+  const imgs = Array.isArray(data?.images) ? data.images : [];
+  return imgs
+    .filter(x => x && x.img)
+    .map(x => ({
+      name: String(x.img),
+      url: CDN_BASE + "characters/" + String(x.img),
+    }));
+}
+
+const CHAR_FOLDER_PATH = "M1/characters";
+
+/* ================== وضع التجربة (Demo Mode) ================== */
+const DEMO_MODE = false; // غير إلى false لاستخدام GitHub API
+
+/* ================== بيانات تجريبية ================== */
+const DEMO_PAIRS = [
+  { base: "cat", a1Url: "https://picsum.photos/400/400?random=1", q2Url: "https://picsum.photos/400/400?random=2" },
+  { base: "dog", a1Url: "https://picsum.photos/400/400?random=3", q2Url: "https://picsum.photos/400/400?random=4" },
+  { base: "bird", a1Url: "https://picsum.photos/400/400?random=5", q2Url: "https://picsum.photos/400/400?random=6" },
+  { base: "fish", a1Url: "https://picsum.photos/400/400?random=7", q2Url: "https://picsum.photos/400/400?random=8" },
+  { base: "lion", a1Url: "https://picsum.photos/400/400?random=9", q2Url: "https://picsum.photos/400/400?random=10" },
+  { base: "tiger", a1Url: "https://picsum.photos/400/400?random=11", q2Url: "https://picsum.photos/400/400?random=12" },
+  { base: "bear", a1Url: "https://picsum.photos/400/400?random=13", q2Url: "https://picsum.photos/400/400?random=14" },
+  { base: "wolf", a1Url: "https://picsum.photos/400/400?random=15", q2Url: "https://picsum.photos/400/400?random=16" },
+];
+
+const DEMO_ANSWERS = DEMO_PAIRS.map(p => ({ base: p.base, url: p.a1Url }));
+
+const DEMO_CHARACTERS = {
+  "hero": {
+    think: ["https://picsum.photos/200/200?random=100"],
+    confused: ["https://picsum.photos/200/200?random=101"],
+    win: ["https://picsum.photos/200/200?random=102"],
+    lose: ["https://picsum.photos/200/200?random=103"],
+    all: ["https://picsum.photos/200/200?random=100"]
+  }
+};
+
+/* ================== إعدادات اللعبة ================== */
+const TOTAL_TIME = 30;
+const OPTIONS_COUNT = 6;
+const WRONG_PENALTY = 4;
+const FAST_BONUS_WINDOW = 2.0;
+const COMBO_STEP = 3;
+
+/* ================== عناصر الواجهة ================== */
+const timeTxt = document.getElementById("timeTxt");
+const timeSide = document.getElementById("timeSide");
+const tFill = document.getElementById("tFill");
+const scoreTxt = document.getElementById("scoreTxt");
+const scoreSide = document.getElementById("scoreSide");
+const optsGrid = document.getElementById("optsGrid");
+const qImg = document.getElementById("qImg");
+
+const btnRestart = document.getElementById("btnRestart");
+const btnSound = document.getElementById("btnSound");
+const btnInfo = document.getElementById("btnInfo");
+const btnMore = document.getElementById("btnMore");
+const btnTrophy = document.getElementById("btnTrophy");
+
+const endModal = document.getElementById("endModal");
+const endClose = document.getElementById("endClose");
+const endRestart = document.getElementById("endRestart");
+const endScoreEl = document.getElementById("endScore");
+const endCorrectEl = document.getElementById("endCorrect");
+const endWrongEl = document.getElementById("endWrong");
+const endRank = document.getElementById("endRank");
+const endPlayerName = document.getElementById("endPlayerName");
+const endSaveBtn = document.getElementById("endSaveBtn");
+const endBoardBody = document.getElementById("endBoardBody");
+const endBoardStatus = document.getElementById("endBoardStatus");
+
+const boardModal = document.getElementById("boardModal");
+const closeBoard = document.getElementById("closeBoard");
+const boardStatus = document.getElementById("boardStatus");
+const boardBody = document.getElementById("boardBody");
+const playerNameEl = document.getElementById("playerName");
+const saveBtn = document.getElementById("saveBtn");
+
+const infoModal = document.getElementById("infoModal");
+const moreModal = document.getElementById("moreModal");
+const infoClose = document.getElementById("infoClose");
+const moreClose = document.getElementById("moreClose");
+
+const preloadModal = document.getElementById("preloadModal");
+const preloadStatus = document.getElementById("preloadStatus");
+const preloadFill = document.getElementById("preloadFill");
+const preloadPct = document.getElementById("preloadPct");
+const preloadCount = document.getElementById("preloadCount");
+const startBtn = document.getElementById("startBtn");
+const backBtn = document.getElementById("backBtn");
+
+const countdownOverlay = document.getElementById("countdownOverlay");
+const countdownNum = document.getElementById("countdownNum");
+
+/* ================== حالة اللعبة ================== */
+let pairs = [];
+let a1Pool = [];
+let current = null;
+let timerStarted = false;
+let timerArmed = false;
+let canClick = false;
+let gameOver = false;
+
+let score = 0;
+let correct = 0;
+let wrong = 0;
+let combo = 0;
+
+let timeLeft = TOTAL_TIME;
+let tickId = null;
+let paused = false;
+
+let qStartMs = 0;
+let soundOn = true;
+
+let pairsBackup = [];
+let assetsReady = false;
+let allImageUrls = [];
+
+// تخزين حالة التحميل محلياً لتجنب إعادة تحميل الصور كل مرة
+const ASSETS_CACHE_KEY = "m1_assets_preloaded_v1";
+function assetsWerePreloaded(){
+  try{ return localStorage.getItem(ASSETS_CACHE_KEY) === "1"; }catch(e){ return false; }
+}
+function markAssetsPreloaded(){
+  try{ localStorage.setItem(ASSETS_CACHE_KEY, "1"); }catch(e){}
+}
+
+
+const CHAR_STATES = ["think","confused","win","lose"];
+let charGroups = {};
+let charKeys = [];
+let currentCharKey = "";
+let charReady = false;
+
+/* ================== أدوات ================== */
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+
+function pick(arr){
+  if(!arr || !arr.length) return "";
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+const AudioCtx=window.AudioContext||window.webkitAudioContext;
+let ctx;
+function beep(freq=880,dur=0.08){
+  if(!soundOn) return;
+  try{
+    ctx = ctx || new AudioCtx();
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type="sine"; o.frequency.value=freq;
+    g.gain.value=0.06;
+    o.connect(g).connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime+dur);
+  }catch(e){}
+}
+
+/* ================== GitHub API ================== */
+function parseCharName(name){
+  const n = String(name||"");
+  const m = n.match(/^(.+?)[_-](think|confused|win|lose)(?:[_-]?\d+)?\.(png|jpe?g|webp)$/i);
+  if(m) return { key: m[1].toLowerCase(), state: m[2].toLowerCase() };
+  const m2 = n.match(/^(.+?)\.(png|jpe?g|webp)$/i);
+  if(m2) return { key: m2[1].toLowerCase(), state: "think" };
+  return null;
+}
+
+function buildCharGroups(files){
+  const groups = {};
+  for(const f of files){
+    const info = parseCharName(f.name);
+    if(!info) continue;
+    if(!groups[info.key]){
+      groups[info.key] = { think:[], confused:[], win:[], lose:[], all:[] };
+    }
+    groups[info.key].all.push(f.url);
+    (groups[info.key][info.state] || groups[info.key].think).push(f.url);
+  }
+  return groups;
+}
+
+function pickFromState(key, state){
+  const g = charGroups[key];
+  if(!g) return "";
+  const st = CHAR_STATES.includes(state) ? state : "think";
+  const pool = (g[st] && g[st].length) ? g[st] : (g.think.length ? g.think : g.all);
+  return pick(pool);
+}
+
+function applyCharacterSrc(src){
+  const img = document.getElementById("charImg");
+  if(!img || !src) return;
+  img.style.opacity = "0";
+  setTimeout(()=>{
+    img.onload = ()=>{ img.style.opacity="1"; };
+    img.onerror = ()=>{ img.style.opacity="1"; };
+    img.src = src;
+  }, 110);
+}
+
+function setCharacterState(state){
+  if(!charReady || !currentCharKey) return;
+  const st = CHAR_STATES.includes(state) ? state : "think";
+  applyCharacterSrc(pickFromState(currentCharKey, st));
+}
+
+function parseBaseAndType(filename){
+  const m = String(filename).match(/^(.+?)([12])\.jpg$/i);
+  if(!m) return null;
+  return { base: m[1], type: m[2] };
+}
+
+async function loadM1Pairs(){
+  if(DEMO_MODE){
+    pairs = shuffle(DEMO_PAIRS.slice());
+    a1Pool = DEMO_ANSWERS.slice();
+    return;
+  }
+  await loadM1PairsFromManifest();
+}
+
+function preload(url){
+  return new Promise((resolve)=>{
+    const img = new Image();
+    img.onload = ()=>resolve(true);
+    img.onerror = ()=>resolve(false);
+    img.src = url;
+  });
+}
+
+async function preloadAllImages(urls){
+  const unique = Array.from(new Set(urls.filter(Boolean)));
+  allImageUrls = unique.slice();
+
+  const total = unique.length;
+  let done = 0;
+
+  function setProgress(){
+    const pct = total ? Math.round((done/total)*100) : 100;
+    preloadFill.style.width = pct + "%";
+    preloadPct.textContent = pct + "%";
+    preloadCount.textContent = `${done}/${total}`;
+  }
+
+  setProgress();
+
+  const CONCURRENCY = 10;
+  let idx = 0;
+
+  async function worker(){
+    while(true){
+      const i = idx++;
+      if(i >= total) return;
+      await preload(unique[i]);
+      done++;
+      setProgress();
+    }
+  }
+
+  await Promise.all(Array.from({length: Math.min(CONCURRENCY, total)}, worker));
+}
+
+/* ================== الوقت ================== */
+function setFillState(pct){
+  tFill.classList.remove("ok","warn","danger");
+  if(pct <= 0.33) tFill.classList.add("danger");
+  else if(pct <= 0.60) tFill.classList.add("warn");
+  else tFill.classList.add("ok");
+}
+
+function updateTimeUI(){
+  const t = String(Math.ceil(timeLeft));
+  timeTxt.textContent = t;
+  if(timeSide) timeSide.textContent = t;
+  const pct = clamp(timeLeft / TOTAL_TIME, 0, 1);
+  tFill.style.width = (pct*100).toFixed(1) + "%";
+  setFillState(pct);
+}
+
+function ensureTimerStarted(){
+  if(timerStarted) return;
+  if(!timerArmed) return;
+  timerStarted = true;
+  beep(1200, 0.14);
+  startTimer();
+}
+
+function startTimer(){
+  stopTimer();
+  tickId = setInterval(()=>{
+    if(paused) return;
+    timeLeft = Math.max(0, timeLeft - 0.1);
+    updateTimeUI();
+    if(timeLeft <= 0) endGame();
+  }, 100);
+}
+
+function stopTimer(){
+  if(tickId){ clearInterval(tickId); tickId = null; }
+}
+
+/* ================== نقاط ================== */
+function updateScoreUI(){
+  scoreTxt.textContent = String(score);
+  if(scoreSide) scoreSide.textContent = String(score);
+}
+
+function calcPointsForAnswer(){
+  const t = (Date.now() - qStartMs) / 1000;
+  const base = Math.round(120 - (t * 8));
+  let pts = clamp(base, 20, 120);
+  if(t <= FAST_BONUS_WINDOW) pts += 30;
+  if(combo > 0 && (combo % COMBO_STEP === 0)) pts += 40;
+  return pts;
+}
+
+/* ================== سؤال ================== */
+function pickQuestion(){
+  if(pairs.length === 0) pairs = shuffle(pairsBackup.slice());
+  const idx = Math.floor(Math.random() * pairs.length);
+  return pairs.splice(idx,1)[0];
+}
+
+function buildOptions(correctBase){
+  const correctOpt = a1Pool.find(x => x.base === correctBase);
+  const others = shuffle(a1Pool.filter(x => x.base !== correctBase).slice());
+  const opts = [correctOpt, ...others.slice(0, OPTIONS_COUNT-1)].filter(Boolean);
+  return shuffle(opts);
+}
+
+function showNextQuestion(){
+  if(!assetsReady) return;
+  
+  current = pickQuestion();
+  if(!current) {
+    endGame();
+    return;
+  }
+
+  qImg.src = current.q2Url;
+  qStartMs = Date.now();
+  gameOver = false;
+  canClick = true;
+  optsGrid.classList.remove('disabled');
+
+  const opts = buildOptions(current.base);
+  optsGrid.innerHTML = "";
+
+  opts.forEach(opt => {
+    const btn = document.createElement("div");
+    btn.className = "optBtn";
+    const img = document.createElement("img");
+    img.src = opt.url;
+    img.alt = opt.base;
+    btn.appendChild(img);
+
+    btn.onclick = () => handleAnswer(opt.base === current.base, btn);
+    optsGrid.appendChild(btn);
+  });
+
+  if(charReady) setCharacterState("think");
+}
+
+function handleAnswer(isCorrect, btn){
+  // لا تقبل أي إجابة بعد انتهاء الوقت أو بعد إغلاق الجولة
+  if(gameOver) return;
+  if(timeLeft <= 0) return;
+  if(!canClick) return;
+  canClick = false;
+
+  ensureTimerStarted();
+
+  if(isCorrect){
+    beep(880, 0.12);
+    btn.classList.add("good");
+    correct++;
+    combo++;
+    const pts = calcPointsForAnswer();
+    score += pts;
+    updateScoreUI();
+    if(charReady) setCharacterState("win");
+    
+    setTimeout(()=> showNextQuestion(), 600);
+  }else{
+    beep(220, 0.18);
+    btn.classList.add("bad");
+    wrong++;
+    combo = 0;
+    timeLeft = Math.max(0, timeLeft - WRONG_PENALTY);
+    updateTimeUI();
+    if(charReady) setCharacterState("lose");
+    
+    setTimeout(()=>{
+      canClick = true;
+      if(charReady) setCharacterState("confused");
+    }, 800);
+  }
+}
+
+/* ================== اللعبة ================== */
+async function runStartCountdown(){
+  // تم إلغاء العد التنازلي حسب الطلب
+  return;
+}
+
+function closePreload(){
+  preloadModal.classList.remove("show");
+}
+
+async function startGame(){
+  closePreload();
+  // بدون عد تنازلي، والوقت يبدأ من أول إجابة (انظر ensureTimerStarted)
+  resetGame(true);
+  timerArmed = true;
+  showNextQuestion();
+}
+
+function resetGame(skipUI){
+  stopTimer();
+  score = 0;
+  correct = 0;
+  wrong = 0;
+  combo = 0;
+  timeLeft = TOTAL_TIME;
+  timerStarted = false;
+  canClick = false;
+  gameOver = false;
+  current = null;
+  optsGrid.classList.add('disabled');
+  
+  if(!skipUI){
+    updateScoreUI();
+    updateTimeUI();
+    optsGrid.innerHTML = "";
+    qImg.src = "";
+  }
+}
+
+function endGame(){
+  stopTimer();
+  gameOver = true;
+  canClick = false;
+  optsGrid.classList.add('disabled');
+  
+  endScoreEl.textContent = String(score);
+  endCorrectEl.textContent = String(correct);
+  endWrongEl.textContent = String(wrong);
+  
+  loadEndLeaderboard();
+  endModal.classList.add("show");
+  
+  if(charReady) setCharacterState("confused");
+}
+
+/* ================== Leaderboard ================== */
+async function loadEndLeaderboard(){
+  endBoardStatus.textContent = "جاري التحميل...";
+  endBoardBody.innerHTML = '<tr><td colspan="5" class="small">جاري التحميل...</td></tr>';
+  
+  if(!window.fetchScores){
+    endBoardStatus.textContent = "Firebase غير متاح";
+    return;
+  }
+
+  const result = await window.fetchScores();
+  if(!result.ok){
+    endBoardStatus.textContent = "فشل التحميل";
+    endBoardBody.innerHTML = '<tr><td colspan="5" class="small">فشل التحميل</td></tr>';
+    return;
+  }
+
+  const rows = result.rows || [];
+  endBoardStatus.textContent = `${rows.length} نتيجة`;
+  
+  if(!rows.length){
+    endBoardBody.innerHTML = '<tr><td colspan="5" class="small">لا توجد نتائج بعد</td></tr>';
+    endRank.textContent = "1";
+    return;
+  }
+
+  let rank = 1;
+  let foundRank = null;
+  
+  for(let i=0; i<rows.length; i++){
+    if(!foundRank && rows[i].scorePoints < score){
+      foundRank = i + 1;
+    }
+    if(!foundRank && rows[i].scorePoints === score && rows[i].wrong > wrong){
+      foundRank = i + 1;
+    }
+  }
+  
+  if(!foundRank) foundRank = rows.length + 1;
+  endRank.textContent = String(foundRank);
+
+  const html = rows.slice(0, 10).map((r,i)=>{
+    const name = String(r.playerName || "لاعب").slice(0, 20);
+    const pts = Math.trunc(Number(r.scorePoints) || 0);
+    const c = Math.trunc(Number(r.correct) || 0);
+    const w = Math.trunc(Number(r.wrong) || 0);
+    return `<tr><td>${i+1}</td><td>${name}</td><td>${pts}</td><td>${c}</td><td>${w}</td></tr>`;
+  }).join("");
+  
+  endBoardBody.innerHTML = html || '<tr><td colspan="5" class="small">لا توجد نتائج</td></tr>';
+}
+
+async function loadLeaderboard(){
+  boardStatus.textContent = "جاري التحميل...";
+  boardBody.innerHTML = '<tr><td colspan="5" class="small">جاري التحميل...</td></tr>';
+  
+  if(!window.fetchScores){
+    boardStatus.textContent = "Firebase غير متاح";
+    return;
+  }
+
+  const result = await window.fetchScores();
+  if(!result.ok){
+    boardStatus.textContent = "فشل التحميل";
+    boardBody.innerHTML = '<tr><td colspan="5" class="small">فشل التحميل</td></tr>';
+    return;
+  }
+
+  const rows = result.rows || [];
+  boardStatus.textContent = `${rows.length} نتيجة`;
+  
+  const html = rows.slice(0, 20).map((r,i)=>{
+    const name = String(r.playerName || "لاعب").slice(0, 20);
+    const pts = Math.trunc(Number(r.scorePoints) || 0);
+    const c = Math.trunc(Number(r.correct) || 0);
+    const w = Math.trunc(Number(r.wrong) || 0);
+    return `<tr><td>${i+1}</td><td>${name}</td><td>${pts}</td><td>${c}</td><td>${w}</td></tr>`;
+  }).join("");
+  
+  boardBody.innerHTML = html || '<tr><td colspan="5" class="small">لا توجد نتائج</td></tr>';
+}
+
+async function saveScore(nameInput, statusEl){
+  const name = String(nameInput.value || "").trim() || "لاعب";
+  
+  if(!window.saveScoreToFirestore){
+    statusEl.textContent = "Firebase غير متاح";
+    return;
+  }
+
+  statusEl.textContent = "جاري الحفظ...";
+  const result = await window.saveScoreToFirestore(name, score, correct, wrong);
+  
+  if(result.ok){
+    statusEl.textContent = "✅ تم الحفظ بنجاح!";
+    setTimeout(()=> loadEndLeaderboard(), 500);
+  }else{
+    statusEl.textContent = "❌ فشل الحفظ";
+  }
+}
+
+/* ================== Events ================== */
+btnRestart.addEventListener("click", ()=>{
+  endModal.classList.remove("show");
+  boardModal.classList.remove("show");
+  resetGame(false);
+  startGame();
+});
+
+btnSound.addEventListener("click", ()=>{
+  soundOn = !soundOn;
+  btnSound.textContent = soundOn ? "🔊" : "🔇";
+});
+
+btnInfo.addEventListener("click", ()=> infoModal.classList.add("show"));
+infoClose.addEventListener("click", ()=> infoModal.classList.remove("show"));
+
+// زر "المزيد" (للشاشات الصغيرة)
+if(btnMore){
+  btnMore.addEventListener("click", ()=> moreModal.classList.add("show"));
+}
+if(moreClose){
+  moreClose.addEventListener("click", ()=> moreModal.classList.remove("show"));
+}
+
+
+btnTrophy.addEventListener("click", ()=>{
+  loadLeaderboard();
+  boardModal.classList.add("show");
+});
+closeBoard.addEventListener("click", ()=> boardModal.classList.remove("show"));
+
+endClose.addEventListener("click", ()=> endModal.classList.remove("show"));
+endRestart.addEventListener("click", ()=>{
+  endModal.classList.remove("show");
+  resetGame(false);
+  startGame();
+});
+
+endSaveBtn.addEventListener("click", ()=> saveScore(endPlayerName, endBoardStatus));
+saveBtn.addEventListener("click", ()=> saveScore(playerNameEl, boardStatus));
+
+if(backBtn) backBtn.addEventListener("click", ()=> location.href = "/");
+
+/* ================== Sidebar ================== */
+const sideSound = document.getElementById("sideSound");
+const sideRestart = document.getElementById("sideRestart");
+const sideTrophy = document.getElementById("sideTrophy");
+const sideHome = document.getElementById("sideHome");
+const sideGames = document.getElementById("sideGames");
+
+if(sideSound) sideSound.addEventListener("click", ()=> btnSound.click());
+if(sideRestart) sideRestart.addEventListener("click", ()=> btnRestart.click());
+if(sideTrophy) sideTrophy.addEventListener("click", ()=> btnTrophy.click());
+if(sideHome) sideHome.addEventListener("click", ()=> location.href = "/");
+
+/* ================== Games Menu ================== */
+async function loadGamesMenu(){
+  const grid = document.getElementById("gamesGrid");
+  const status = document.getElementById("gamesStatus");
+  if(!grid) return;
+
+  grid.innerHTML = "";
+  if(status) status.textContent = "جاري تحميل الألعاب…";
+
+  const candidates = ["/games.json", "../../games.json", "../games.json", "./games.json"];
+  let data = null;
+  
+  for(const p of candidates){
+    try{
+      const res = await fetch(p, { cache: 'default' });
+      if(res.ok){
+        data = await res.json();
+        break;
+      }
+    }catch(e){}
+  }
+
+  if(!data){
+    grid.innerHTML = '<div class="small" style="grid-column:1/-1;text-align:center">تعذر تحميل قائمة الألعاب</div>';
+    if(status) status.textContent = "تعذر التحميل";
+    return;
+  }
+
+  const games = Array.isArray(data) ? data : (Array.isArray(data?.games) ? data.games : []);
+  if(!games.length){
+    grid.innerHTML = '<div class="small" style="grid-column:1/-1;text-align:center">لا توجد ألعاب</div>';
+    if(status) status.textContent = "جاهز";
+    return;
+  }
+
+  const origin = location.origin.replace(/\/+$/,"");
+  const baseUrl = (typeof data?.baseUrl === "string" && data.baseUrl.trim())
+    ? data.baseUrl.trim().replace(/\/+$/,"")
+    : origin;
+
+  function toAbsoluteHref(href){
+    let h = String(href||"").trim();
+    if(!h || h === "#") return "#";
+    if(/^https?:\/\//i.test(h)) return h;
+    if(h.startsWith("/")) return baseUrl + h;
+    return baseUrl + "/" + h.replace(/^\.?\//,"");
+  }
+
+  games.forEach(g=>{
+    const title = String(g.title || g.name || "لعبة").trim();
+    const hrefAbs = toAbsoluteHref(g.href || g.url || "#");
+    const emoji = String(g.emoji || g.icon || "🎮").trim();
+
+    const a = document.createElement("a");
+    a.className = "gameTile";
+    a.href = hrefAbs;
+    a.title = title;
+
+    const icon = document.createElement("div");
+    icon.className = "gIcon";
+
+    if(g.img){
+      const im = document.createElement("img");
+      im.alt = title;
+      im.src = toAbsoluteHref(String(g.img));
+      icon.appendChild(im);
+    }else{
+      icon.textContent = emoji;
+    }
+
+    const name = document.createElement("div");
+    name.className = "gName";
+    name.textContent = title;
+
+    a.appendChild(icon);
+    a.appendChild(name);
+    grid.appendChild(a);
+  });
+
+  if(status) status.textContent = "اختر لعبة";
+}
+
+if(sideGames) sideGames.addEventListener("click", async ()=>{
+  await loadGamesMenu();
+  document.getElementById("gamesModal")?.classList.add('show');
+});
+
+const gamesClose = document.getElementById("gamesClose");
+const gamesModal = document.getElementById("gamesModal");
+if(gamesClose) gamesClose.addEventListener("click", ()=> gamesModal?.classList.remove('show'));
+if(gamesModal) gamesModal.addEventListener('click',(e)=>{ 
+  if(e.target===gamesModal) gamesModal.classList.remove('show'); 
+});
+
+/* ================== تحميل الأصول ================== */
+async function prepareGameAssets(){
+  if(startBtn) if(startBtn) startBtn.disabled = true;
+  preloadStatus.textContent = "جاري قراءة صور M1…";
+  preloadFill.style.width = "0%";
+  preloadPct.textContent = "0%";
+  preloadCount.textContent = "0/0";
+
+  try{
+    await loadM1Pairs();
+    pairsBackup = pairs.slice();
+
+    // تحميل الشخصيات
+    if(DEMO_MODE){
+      charGroups = DEMO_CHARACTERS;
+      charKeys = Object.keys(charGroups);
+      if(charKeys.length){
+        currentCharKey = pick(charKeys);
+        charReady = true;
+        const starter = pickFromState(currentCharKey, 'think');
+        if(starter){
+          applyCharacterSrc(starter);
+          await preload(starter);
+        }
+      }
+    }else{
+      try{
+        const charFiles = await fetchCharactersFromManifest();
+        charGroups = buildCharGroups(charFiles);
+        charKeys = Object.keys(charGroups);
+        if(charKeys.length){
+          currentCharKey = pick(charKeys);
+          charReady = true;
+          const starter = pickFromState(currentCharKey, 'think');
+          if(starter){
+            applyCharacterSrc(starter);
+            await preload(starter);
+          }
+        }
+      }catch(e){
+        console.warn('Characters load failed', e);
+        charReady = false;
+      }
+    }
+
+    const urls = [];
+    for(const p of pairsBackup){
+      if(p?.q2Url) urls.push(p.q2Url);
+      if(p?.a1Url) urls.push(p.a1Url);
+    }
+    for(const a of a1Pool){
+      if(a?.url) urls.push(a.url);
+    }
+
+    // إذا كانت الصور مُحمّلة سابقاً (في نفس الجهاز/المتصفح) فلا نعيد تحميلها
+if(assetsWerePreloaded()){
+  preloadStatus.textContent = "✅ الصور محمّلة مسبقاً. يتم البدء الآن…";
+  preloadFill.style.width = "100%";
+  preloadPct.textContent = "100%";
+  preloadCount.textContent = `${urls.length}/${urls.length}`;
+}else{
+  preloadStatus.textContent = "جاري تحميل الصور…";
+  await preloadAllImages(urls);
+  markAssetsPreloaded();
+}
+
+assetsReady = true;
+// إخفاء نافذة التحميل تلقائياً والبدء مباشرة (بدون ضغط)
+preloadStatus.textContent = "✅ جاهز";
+startBtn.disabled = true;
+
+setTimeout(()=>{ startGame(); }, 120);
+  }catch(e){
+    preloadStatus.textContent = "❌ خطأ: " + e.message;
+    console.error(e);
+  }
+}
+
+// زر ابدأ لم يعد مطلوباً، البداية تتم تلقائياً بعد التجهيز
+startBtn?.addEventListener("click", startGame);
+
+window.addEventListener("DOMContentLoaded", async ()=>{
+  preloadModal.classList.add("show");
+  await prepareGameAssets();
+});
+
+// إخفاء الإعلان إذا لم توجد الصورة بجانب ملف HTML
+(function(){
+  const wrap = document.getElementById('adWrap');
+  const img = wrap?.querySelector('img');
+  if(!wrap || !img) return;
+  img.addEventListener('error', ()=>{ wrap.style.display='none'; });
+})();
+
+</script>
+
+<!-- Firebase leaderboard -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBhfY0pqlb0DjHlwfIdTe0Zlbo26lhdi8g",
+    authDomain: "question-c0005.firebaseapp.com",
+    projectId: "question-c0005",
+    storageBucket: "question-c0005.firebasestorage.app",
+    messagingSenderId: "221210020836",
+    appId: "1:221210020836:web:9b64c3990be4a2323d55f1",
+    measurementId: "G-RQVWSXQVB5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  async function ensureLogin(){
+    if (auth.currentUser) return auth.currentUser;
+    const cred = await signInAnonymously(auth);
+    return cred.user;
+  }
+
+  async function saveScoreToFirestore(playerName, scorePoints, correct, wrong){
+    const user = await ensureLogin();
+    const doc = {
+      playerName: String(playerName ?? "").trim().slice(0, 20) || "لاعب",
+      scorePoints: Math.trunc(Number(scorePoints)),
+      correct: Math.trunc(Number(correct)),
+      wrong: Math.trunc(Number(wrong)),
+      gameId: "m1",
+      createdAt: serverTimestamp(),
+      uid: user.uid
+    };
+
+    if (doc.scorePoints < 0 || doc.scorePoints > 999999) throw new Error("scorePoints خارج النطاق");
+    if (doc.correct < 0 || doc.correct > 9999) throw new Error("correct خارج النطاق");
+    if (doc.wrong < 0 || doc.wrong > 9999) throw new Error("wrong خارج النطاق");
+
+    const ref = await addDoc(collection(db, "m1_scores"), doc);
+    return ref.id;
+  }
+
+  async function fetchScores(){
+    const q = query(collection(db, "m1_scores"), orderBy("createdAt", "desc"), limit(50));
+    const snap = await getDocs(q);
+    const rows = [];
+    snap.forEach(d => rows.push(d.data()));
+
+    const filtered = rows.filter(r => r);
+    filtered.sort((a,b)=>{
+      const sa = (typeof a.scorePoints === "number") ? a.scorePoints : -1;
+      const sb = (typeof b.scorePoints === "number") ? b.scorePoints : -1;
+      if (sa !== sb) return sb - sa;
+
+      const wa = (typeof a.wrong === "number") ? a.wrong : 1e9;
+      const wb = (typeof b.wrong === "number") ? b.wrong : 1e9;
+      if (wa !== wb) return wa - wb;
+
+      const ca = (typeof a.correct === "number") ? a.correct : -1;
+      const cb = (typeof b.correct === "number") ? b.correct : -1;
+      return cb - ca;
+    });
+
+    return filtered.slice(0, 20);
+  }
+
+  window.saveScoreToFirestore = async (playerName, scorePoints, correct, wrong) => {
+    try{
+      const id = await saveScoreToFirestore(playerName, scorePoints, correct, wrong);
+      return { ok:true, id };
+    }catch(e){
+      return { ok:false, error: e?.message || String(e) };
+    }
+  };
+
+  window.fetchScores = async () => {
+    try{
+      const rows = await fetchScores();
+      return { ok:true, rows };
+    }catch(e){
+      return { ok:false, error: e?.message || String(e), rows: [] };
+    }
+  };
+</script>
+
+</body>
+</html>

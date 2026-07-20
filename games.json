@@ -1,0 +1,52 @@
+{
+  "games": [
+    {
+      "id": "pairs",
+      "name": "قرائن الصور",
+      "icon": "🧩",
+      "href": "m1/pairs.html",
+      "status": "live",
+      "note": "قرائن A1↔A2"
+    },
+    {
+      "id": "similarity",
+      "name": "التشابه العادي",
+      "icon": "🧠",
+      "href": "g2/similarity.html",
+      "status": "live",
+      "note": "A2 مع A2"
+    },
+    {
+      "id": "m1quiz",
+      "name": "السؤال",
+      "icon": "🎯",
+      "href": "Q/Q.HTML",
+      "status": "live",
+      "note": "سؤال 2 + خيارات 1"
+    },
+    {
+      "id": "airlogo",
+      "name": "Air Logo",
+      "icon": "✈️",
+      "href": "g1/airlogo.html",
+      "status": "live",
+      "note": "لعبة الطيران"
+    },
+    {
+      "id": "game4",
+      "name": "اللعبة الرابعة",
+      "icon": "✨",
+      "href": "#",
+      "status": "soon",
+      "note": "قريباً"
+    },
+    {
+      "id": "game5",
+      "name": "اللعبة الخامسة",
+      "icon": "🔥",
+      "href": "#",
+      "status": "soon",
+      "note": "قريباً"
+    }
+  ]
+}
