@@ -230,19 +230,20 @@
   .linkCard:hover{background:rgba(255,255,255,.08)}
 
 
-  .content{flex:1; display:flex; flex-direction:column; gap:10px; min-height:0;}
+  .content{flex:1; display:flex; flex-direction:column; gap:12px; min-height:0;}
   .panel{
     border:1px solid rgba(255,255,255,.10);
-    background:rgba(5,10,20,.35);
+    background:linear-gradient(180deg, rgba(11,18,32,.72), rgba(6,12,22,.58));
     border-radius:22px;
     padding:12px;
     display:flex; flex-direction:column; gap:10px;
   }
   .qImgWrap{
-    background: transparent;
-    border: none;
-    padding: 0;
-    box-shadow: none;
+    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+    border:1px solid rgba(255,255,255,.08);
+    padding: 12px;
+    border-radius:20px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -255,9 +256,9 @@
     height: auto;
     max-height: clamp(300px, 45vh, 520px);
     object-fit: contain;
-    border-radius: 22px;
-    border: 3px solid rgba(255,255,255,.35);
-    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    border-radius: 18px;
+    border: 2px solid rgba(255,255,255,.28);
+    box-shadow: 0 10px 24px rgba(0,0,0,.28);
     display:block;
   }
 
@@ -294,26 +295,28 @@
   .tfill.warn{background:linear-gradient(90deg, rgba(241,196,15,.95), rgba(230,126,34,.92));}
   .tfill.danger{background:linear-gradient(90deg, rgba(231,76,60,.98), rgba(155,89,182,.90));}
 
-  .grid{display:grid; grid-template-columns:repeat(6,1fr); gap:10px;}
+  .grid{display:grid; grid-template-columns:repeat(6,1fr); gap:12px;}
   /* تعطيل الإجابات عند انتهاء الوقت/نهاية الجولة */
   #optsGrid.disabled{pointer-events:none;}
   #optsGrid.disabled .optBtn{opacity:.65; filter:saturate(.75);}
   .optBtn{
-    border-radius:18px; border:1px solid var(--stroke);
-    background:rgba(255,255,255,.04);
+    border-radius:18px; border:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
     cursor:pointer; overflow:hidden;
-    transition: transform .08s ease, border-color .12s ease, box-shadow .12s ease;
+    transition: transform .08s ease, border-color .12s ease, box-shadow .12s ease, background .12s ease;
     aspect-ratio:1/1;
     display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.18);
   }
+  .optBtn:hover{background:rgba(255,255,255,.07)}
   .optBtn:active{transform:scale(.98)}
-  .optBtn img{width:100%;height:100%;object-fit:contain;padding:10px;display:block;}
+  .optBtn img{width:100%;height:100%;object-fit:contain;padding:12px;display:block;}
   .optBtn.good{border-color:rgba(46,204,113,.55); box-shadow:0 0 0 2px rgba(46,204,113,.18) inset;}
   .optBtn.bad{border-color:rgba(231,76,60,.65); box-shadow:0 0 0 2px rgba(231,76,60,.22) inset;}
 
   .bottomBar{
-    border-top:1px solid rgba(255,255,255,.10);
-    padding-top:12px;
+    border-top:1px solid rgba(255,255,255,.08);
+    padding-top:10px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -322,14 +325,17 @@
   }
   .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; width:100%;}
   .btn{
-    border-radius:16px;
-    border:1px solid var(--stroke);
-    background:rgba(255,255,255,.05);
+    min-width:56px;
+    min-height:44px;
+    border-radius:15px;
+    border:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
     color:var(--text);
-    padding:10px 12px;
+    padding:10px 14px;
     cursor:pointer;
+    box-shadow:0 8px 18px rgba(0,0,0,.18);
   }
-  .btn.primary{background:rgba(79,172,254,.18);}
+  .btn.primary{background:linear-gradient(135deg, rgba(79,172,254,.28), rgba(0,242,254,.14));}
 
   .modal{
     position:fixed;inset:0;display:none;align-items:center;justify-content:center;
@@ -489,18 +495,76 @@
   @media (max-width: 820px){
     .layout{grid-template-columns:1fr}
     aside.sidebar{display:none}
-    .grid{grid-template-columns:repeat(3,1fr)}
+    .card{width:min(980px, 100vw); height:min(820px, calc(100vh - 16px)); border-radius:22px; padding:12px}
+    .topbar{gap:8px}
+    .title{font-size:17px}
+    .pill{padding:8px 10px;border-radius:15px;gap:8px}
+    .kv b{font-size:17px}
+    .grid{grid-template-columns:repeat(3,1fr); gap:10px}
     .qImgWrap img{max-height: clamp(240px, 40vh, 420px);}
   }
   @media (max-width: 520px){
-    /* تحسين العرض على الشاشات الصغيرة */
-    .qImgWrap{padding:8px; margin-bottom:12px;}
-    .qImgWrap img{width:100%; height:auto; max-height:32vh;}
-    .timerRow{margin-top:10px; gap:8px;}
+    .card{
+      width:100vw;
+      height:100vh;
+      border-radius:0;
+      padding:10px;
+      gap:10px;
+      border-left:none;
+      border-right:none;
+    }
+    .topbar{
+      gap:8px;
+      align-items:center;
+    }
+    .title{font-size:16px}
+    .topRight{gap:8px}
+    .pill{padding:7px 9px;border-radius:14px}
+    .muted{font-size:12px}
+    .kv{gap:6px}
+    .kv b{font-size:16px}
+    .infoBtn{width:38px;height:38px;border-radius:13px}
+    .content{gap:10px}
+    .panel{padding:10px;border-radius:18px;gap:10px}
+    .qImgWrap{
+      min-height:0;
+      padding:10px;
+      margin-bottom:4px;
+      border-radius:18px;
+    }
+    .qImgWrap img{
+      width:100%;
+      height:auto;
+      max-height:30vh;
+      border-radius:16px;
+    }
+    .timerRow{margin-top:2px; gap:8px;}
     .timeNum{font-size:16px; width:32px;}
+    .tbar{height:14px; max-width:none; width:100%}
+    .grid{grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px;}
+    .optBtn{border-radius:15px}
+    .optBtn img{padding:8px}
+    .bottomBar{padding-top:8px}
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1.25fr 1fr;
+      gap:8px;
+    }
+    .btn{
+      width:100%;
+      min-width:0;
+      padding:10px 8px;
+      font-size:13px;
+    }
   }
   @media (max-width: 420px){
-    .title{font-size:16px}
+    .title{font-size:15px}
+    .pill{padding:6px 8px}
+    .muted{font-size:11px}
+    .kv b{font-size:15px}
+    .infoBtn{width:36px;height:36px}
+    .grid{gap:7px}
+    .btn{font-size:12px}
   }
 
   /* ===== إعلان (mubher.png) ===== */
