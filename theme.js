@@ -17,7 +17,7 @@ html[data-theme="light"] body{
   background: radial-gradient(920px 520px at 88% 0%, rgba(79,172,254,.18), transparent 55%), linear-gradient(180deg, var(--bg0), var(--bg1));
 }
 html[data-theme="light"] .heroCard,
-html[data-theme="light"] .card,
+html[data-theme="light"] main > .card,
 html[data-theme="light"] .sbox,
 html[data-theme="light"] .panel,
 html[data-theme="light"] .brand,
@@ -81,6 +81,39 @@ html[data-theme="light"] .heroBrandMark,
 html[data-theme="light"] .gamesBtn,
 html[data-theme="light"] [data-theme-toggle]{
   box-shadow:0 4px 12px rgba(79,172,254,.14);
+}
+
+/* ألعاب المطابقة (pairs / airlogo / similarity) */
+html[data-theme="light"] .grid .card .face{
+  border-color:rgba(19,37,59,.14) !important;
+  box-shadow:0 8px 18px rgba(88,116,150,.16) !important;
+}
+html[data-theme="light"] .grid .card .front{
+  background:
+    radial-gradient(280px 180px at 30% 25%, rgba(79,172,254,.12), transparent 55%),
+    radial-gradient(240px 160px at 80% 80%, rgba(0,166,214,.10), transparent 55%),
+    var(--card-back) center/44% no-repeat,
+    linear-gradient(180deg, rgba(255,255,255,.92), rgba(236,244,255,.88)) !important;
+}
+html[data-theme="light"] .grid .card .back{
+  background:
+    radial-gradient(320px 200px at 25% 30%, rgba(79,172,254,.10), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.94), rgba(228,238,252,.90)) !important;
+}
+html[data-theme="light"] .grid .card .imgBox{
+  background:rgba(255,255,255,.96) !important;
+  border:1px solid rgba(19,37,59,.12) !important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8);
+}
+html[data-theme="light"] .grid .card.matched .face{
+  border-color:rgba(43,127,255,.45) !important;
+}
+html[data-theme="light"] .grid .card.matched::before{
+  opacity:.85;
+}
+html[data-theme="light"] .stage,
+html[data-theme="light"] .playArea{
+  background:transparent;
 }
 `;
 
