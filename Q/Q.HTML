@@ -167,6 +167,11 @@
     display:flex;align-items:center;justify-content:center;
     font-weight:950;font-size:18px;line-height:1;
   }
+  .infoBtn.gamesBtn{
+    font-size:20px;
+    border-color:rgba(79,172,254,.32);
+    background:linear-gradient(145deg, rgba(79,172,254,.18), rgba(0,242,254,.08));
+  }
 
   .moreBtn{display:none;font-weight:900;font-size:20px}
   @media (max-width:700px){
@@ -655,6 +660,7 @@
       <div class="topbar">
         <div class="title">🎯 كود الملصق</div>
         <div class="topRight">
+          <button class="infoBtn gamesBtn" id="btnGames" type="button" title="قائمة الألعاب" aria-label="قائمة الألعاب">🎮</button>
           <div class="pill kv">
             <span class="muted">النقاط</span>
             <b id="scoreTxt">0</b>
@@ -686,7 +692,6 @@
 
       <div class="bottomBar">
         <div class="controls">
-          <button class="btn" id="btnGames" title="قائمة الألعاب">🎮 الألعاب</button>
           <button class="btn" id="btnSound" title="كتم الصوت">🔊</button>
           <button class="btn primary" id="btnRestart" title="إعادة">🔄 إعادة</button>
           <button class="btn" id="btnTrophy" title="السجل العالمي">🏆</button>
