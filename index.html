@@ -401,6 +401,7 @@ async function renderHomeGrid(){
         `);
       }
     });
+    if(window.__lastHomeLeaders) applyHomeLeaders(window.__lastHomeLeaders);
   }catch(e){
     console.warn("home grid load failed", e);
     host.innerHTML = '<div class="small">تعذر تحميل قائمة الألعاب</div>';
