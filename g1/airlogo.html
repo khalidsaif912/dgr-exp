@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("dgr-theme") || "dark");}catch(e){document.documentElement.setAttribute("data-theme","dark");}</script>
 <meta name="theme-color" content="#070B14"/>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
 <title>✈️ الطيران</title>
@@ -226,6 +227,7 @@ main{
   align-items:center;justify-content:space-between;padding:10px 12px;
 }
 .mTitle{font-weight:900;font-size:15px;letter-spacing:.2px}
+.mTopActions{display:flex;align-items:center;gap:8px}
 .mBtn,.mIcon{
   width:36px;height:36px;border-radius:12px;border:1px solid var(--stroke);
   background:rgba(255,255,255,.05);
@@ -374,7 +376,10 @@ main{
 <div class="mTop">
   <a class="mBtn" href="/" title="العودة للروستر">🏠</a>
   <div class="mTitle">✈️ الطيران</div>
-  <button class="mBtn" id="mGames" title="الألعاب">🎮</button>
+  <div class="mTopActions">
+    <button class="mBtn" id="mTheme" data-theme-toggle title="تبديل الثيم" aria-label="تبديل الثيم">🌙</button>
+    <button class="mBtn" id="mGames" title="الألعاب">🎮</button>
+  </div>
 </div>
 
 <!-- Mobile Bottom Bar -->
@@ -403,6 +408,7 @@ main{
 
       <div class="row">
         <a class="iconBtn" href="/" title="العودة للروستر">🏠</a>
+        <button class="iconBtn" id="themeBtn" data-theme-toggle title="تبديل الثيم" aria-label="تبديل الثيم">🌙</button>
         <button class="iconBtn" id="gamesBtn" title="الألعاب">🎮</button>
       </div>
 
@@ -1074,5 +1080,6 @@ window.addEventListener('DOMContentLoaded',()=>{
 </div>
   </div>
 </div>
+<script src="/theme.js"></script>
 </body>
 </html>

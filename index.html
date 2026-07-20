@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("dgr-theme") || "dark");}catch(e){document.documentElement.setAttribute("data-theme","dark");}</script>
 <meta name="theme-color" content="#070B14"/>
 <meta name="description" content="ألعاب ذاكرة وتدريب DGR — مطابقة، تشابه، اختبار، وAir Logo"/>
 <title>ألعاب الذاكرة - الصفحة الرئيسية</title>
@@ -99,6 +100,7 @@ body{
 }
 .iconBtn:hover{background:linear-gradient(145deg, rgba(79,172,254,.32), rgba(0,242,254,.14))}
 .iconBtn:active{transform:scale(.97)}
+.themeBtnActive{box-shadow:0 0 0 2px rgba(79,172,254,.22) inset, 0 4px 14px rgba(79,172,254,.15);} 
 
 .heroBody{
   padding:12px 14px 14px;
@@ -425,6 +427,7 @@ body{
             <span class="heroBrandTitle">ألعاب الذاكرة</span>
           </div>
         </div>
+        <button class="iconBtn" id="themeBtn" data-theme-toggle title="تبديل الثيم" type="button" aria-label="تبديل الثيم">🌙</button>
         <button class="iconBtn" id="gamesBtn" title="قائمة الألعاب" type="button" aria-label="قائمة الألعاب">🎮</button>
       </header>
       <div class="heroBody">
@@ -617,5 +620,6 @@ window.addEventListener("home-leaders", (e)=>{
 </script>
 <script type="module" src="/home-leaders.js"></script>
 
+<script src="/theme.js"></script>
 </body>
 </html>
