@@ -29,43 +29,78 @@ body{
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-.topbar{
-  position:fixed;left:12px;right:12px;top:max(10px, env(safe-area-inset-top));z-index:20;
-  height:56px;border-radius:20px;border:1px solid var(--stroke);
-  background:linear-gradient(180deg, rgba(22,34,56,.96), rgba(10,16,28,.92));
-  box-shadow:0 10px 32px rgba(0,0,0,.38);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 12px;
-}
-.brand{display:flex;flex-direction:column;gap:1px;min-width:0}
-.brand .appname{font-size:11px;color:var(--muted)}
-.brand .title{font-size:15px;font-weight:900;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.iconBtn{
-  width:42px;height:42px;border-radius:14px;flex-shrink:0;
-  border:1px solid rgba(79,172,254,.28);background:rgba(79,172,254,.08);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:20px;
-  transition:transform .12s ease, background .12s ease;
-  -webkit-tap-highlight-color:transparent;color:var(--text);
-}
-.iconBtn:hover{background:rgba(79,172,254,.14)}
-.iconBtn:active{transform:scale(.97)}
-
 .container{
   min-height:100vh;
   min-height:100dvh;
-  padding:calc(78px + env(safe-area-inset-top, 0px)) 14px 24px;
+  padding:max(10px, env(safe-area-inset-top)) 14px 24px;
   display:flex;align-items:flex-start;justify-content:center;
 }
 .shell{width:min(920px,100%)}
 
 .heroCard{
   border-radius:24px;
-  border:1px solid rgba(79,172,254,.18);
+  border:1px solid rgba(79,172,254,.22);
   background:linear-gradient(165deg, rgba(22,36,58,.98) 0%, rgba(10,16,28,.92) 100%);
   box-shadow:var(--shadow);
-  padding:18px 16px 16px;
+  padding:0;
   margin-bottom:20px;
+  overflow:hidden;
+}
+
+.heroHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 14px 10px;
+  background:linear-gradient(180deg, rgba(79,172,254,.08), transparent);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.heroBrand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  flex:1;
+}
+.heroBrandMark{
+  width:40px;height:40px;flex-shrink:0;
+  border-radius:14px;
+  border:1px solid rgba(79,172,254,.4);
+  background:linear-gradient(145deg, rgba(79,172,254,.28), rgba(0,242,254,.12));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+.heroBrandText{min-width:0;display:flex;flex-direction:column;gap:1px}
+.heroBrandKicker{
+  font-size:11px;font-weight:700;
+  letter-spacing:.04em;
+  color:var(--accent2);
+  text-transform:none;
+}
+.heroBrandTitle{
+  font-size:15px;font-weight:900;
+  line-height:1.2;
+  color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+.iconBtn{
+  width:42px;height:42px;border-radius:14px;flex-shrink:0;
+  border:1px solid rgba(79,172,254,.35);
+  background:linear-gradient(145deg, rgba(79,172,254,.2), rgba(0,242,254,.08));
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:20px;
+  transition:transform .12s ease, background .12s ease, box-shadow .12s ease;
+  -webkit-tap-highlight-color:transparent;color:var(--text);
+  box-shadow:0 4px 14px rgba(79,172,254,.15);
+}
+.iconBtn:hover{background:linear-gradient(145deg, rgba(79,172,254,.32), rgba(0,242,254,.14))}
+.iconBtn:active{transform:scale(.97)}
+
+.heroBody{
+  padding:12px 14px 14px;
 }
 .heroTop{
   display:flex;
@@ -242,9 +277,11 @@ body{
 .small{color:var(--muted);font-size:13px}
 
 @media (min-width:720px){
-  .container{padding-left:20px;padding-right:20px}
-  .heroCard{padding:22px 20px;border-radius:28px}
-  .heroTop{align-items:flex-start;flex-wrap:wrap}
+  .container{padding:16px 20px 24px}
+  .heroCard{border-radius:28px;margin-bottom:20px}
+  .heroHead{padding:14px 18px 12px}
+  .heroBody{padding:14px 18px 18px}
+  .heroTop{align-items:center;flex-wrap:wrap}
   .heroTop .h{flex:1 1 100%}
   .badges--inline{flex:1 1 100%;margin-top:8px}
   .gamesPanel{flex:none}
@@ -256,52 +293,55 @@ body{
   .game-item:hover{background:rgba(255,255,255,.06);transform:translateY(-1px)}
 }
 @media (max-width:719px){
-  .topbar{
-    left:10px;right:10px;
-    height:46px;border-radius:16px;
-    padding:5px 10px;
-  }
-  .brand .appname{font-size:10px}
-  .brand .title{font-size:13px}
-  .iconBtn{width:36px;height:36px;border-radius:12px;font-size:17px}
   .container{
-    padding:calc(56px + env(safe-area-inset-top, 0px)) 10px 8px;
+    padding:max(8px, env(safe-area-inset-top)) 10px 8px;
     align-items:stretch;
   }
   .shell{
     display:flex;
     flex-direction:column;
     flex:1;
-    min-height:calc(100dvh - 56px - env(safe-area-inset-top, 0px) - 8px);
+    min-height:calc(100dvh - max(8px, env(safe-area-inset-top)) - 8px);
   }
   .heroCard{
     flex:0 0 auto;
-    padding:6px 8px;
-    margin-bottom:4px;
-    border-radius:12px;
-    box-shadow:0 4px 16px rgba(0,0,0,.22);
+    margin-bottom:6px;
+    border-radius:16px;
+    box-shadow:0 8px 28px rgba(0,0,0,.32);
   }
+  .heroHead{
+    padding:8px 10px 7px;
+    gap:8px;
+  }
+  .heroBrand{gap:8px}
+  .heroBrandMark{
+    width:34px;height:34px;
+    font-size:17px;
+    border-radius:11px;
+  }
+  .heroBrandKicker{font-size:9px}
+  .heroBrandTitle{font-size:13px}
+  .iconBtn{
+    width:36px;height:36px;
+    border-radius:12px;
+    font-size:17px;
+  }
+  .heroBody{padding:8px 10px 10px}
   .heroTop{
     gap:6px;
     margin-bottom:0;
     flex-wrap:nowrap;
   }
-  .heroMark{
-    width:28px;height:28px;
-    font-size:15px;
-    border-radius:9px;
-  }
+  .heroMark{display:none}
   .heroTop .h{
-    font-size:13px;
-    line-height:1.15;
+    font-size:14px;
+    line-height:1.2;
     flex:1 1 auto;
     -webkit-text-fill-color:#EEF3FF;
     background:none;
   }
   .hero .sub{display:none}
-  .badges--inline{
-    gap:3px;
-  }
+  .badges--inline{gap:3px}
   .badges--inline .badge{
     font-size:8px;
     padding:2px 5px;
@@ -366,27 +406,31 @@ body{
 </head>
 <body>
 
-<div class="topbar">
-  <div class="brand">
-    <div class="appname">روستر · DGR</div>
-    <div class="title">ألعاب الذاكرة</div>
-  </div>
-  <button class="iconBtn" id="gamesBtn" title="قائمة الألعاب" type="button">🎮</button>
-</div>
-
 <div class="container">
   <div class="shell">
     <div class="heroCard">
-      <div class="heroTop">
-        <div class="heroMark" aria-hidden="true">🧠</div>
-        <h1 class="h">درّب ذاكرتك بسرعة</h1>
-        <div class="badges badges--inline">
-          <span class="badge">٤ ألعاب</span>
-          <span class="badge muted">🏆</span>
-          <span class="badge muted hide-sm">سجل عالمي</span>
+      <header class="heroHead">
+        <div class="heroBrand">
+          <div class="heroBrandMark" aria-hidden="true">🎮</div>
+          <div class="heroBrandText">
+            <span class="heroBrandKicker">روستر · DGR</span>
+            <span class="heroBrandTitle">ألعاب الذاكرة</span>
+          </div>
         </div>
+        <button class="iconBtn" id="gamesBtn" title="قائمة الألعاب" type="button" aria-label="قائمة الألعاب">🎮</button>
+      </header>
+      <div class="heroBody">
+        <div class="heroTop">
+          <div class="heroMark" aria-hidden="true">🧠</div>
+          <h1 class="h">درّب ذاكرتك بسرعة</h1>
+          <div class="badges badges--inline">
+            <span class="badge">٤ ألعاب</span>
+            <span class="badge muted">🏆</span>
+            <span class="badge muted hide-sm">سجل عالمي</span>
+          </div>
+        </div>
+        <p class="sub">ألعاب خفيفة في المتصفح — اختر لعبة من القائمة أو زر 🎮 في الترويسة.</p>
       </div>
-      <p class="sub">ألعاب خفيفة في المتصفح — اختر لعبة أو زر 🎮 بالأعلى.</p>
     </div>
 
     <div class="gamesPanel">
