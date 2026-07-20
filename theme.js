@@ -64,6 +64,16 @@ html[data-theme="light"] .lbl,
 html[data-theme="light"] .mLbl{
   color:rgba(19,37,59,.68) !important;
 }
+html[data-theme="light"] .record-line{
+  color:#7a4d00 !important;
+}
+html[data-theme="light"] .record-line strong{
+  color:#4a2b00 !important;
+}
+html[data-theme="light"] .record-line.empty,
+html[data-theme="light"] .record-line.loading{
+  color:rgba(19,37,59,.62) !important;
+}
 html[data-theme="light"] .heroTop .h{
   -webkit-text-fill-color:initial;
 }
@@ -87,10 +97,10 @@ html[data-theme="light"] [data-theme-toggle]{
     try{localStorage.setItem(KEY, theme);}catch(e){}
     if(metaTheme) metaTheme.setAttribute('content', theme === 'light' ? '#eff5ff' : '#070B14');
     document.querySelectorAll('[data-theme-toggle]').forEach((btn)=>{
-      btn.textContent = theme === 'light' ? '??' : '??';
+      btn.textContent = theme === 'light' ? '\u2600' : '\u263E';
       btn.classList.toggle('themeBtnActive', theme === 'light');
-      btn.setAttribute('title', theme === 'light' ? '????? ???????' : '????? ??????');
-      btn.setAttribute('aria-label', theme === 'light' ? '????? ???????' : '????? ??????');
+      btn.setAttribute('title', theme === 'light' ? 'الثيم النهاري' : 'الثيم الليلي');
+      btn.setAttribute('aria-label', theme === 'light' ? 'الثيم النهاري' : 'الثيم الليلي');
     });
   }
   function toggleTheme(){
