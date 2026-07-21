@@ -81,6 +81,56 @@ html[data-theme="light"] .heroBrandMark,
 html[data-theme="light"] .gamesBtn,
 html[data-theme="light"] [data-theme-toggle]{
   box-shadow:0 4px 12px rgba(79,172,254,.14);
+  color:var(--text) !important;
+}
+html[data-theme="light"] .heroBrandTitle,
+html[data-theme="light"] .name,
+html[data-theme="light"] .sectionTitle,
+html[data-theme="light"] .title,
+html[data-theme="light"] .title2{
+  color:#13253b !important;
+}
+html[data-theme="light"] .badge{
+  background:rgba(43,127,255,.14) !important;
+  border-color:rgba(43,127,255,.35) !important;
+  color:#0b3d7a !important;
+}
+html[data-theme="light"] .badge.muted{
+  background:rgba(19,37,59,.06) !important;
+  border-color:rgba(19,37,59,.14) !important;
+  color:#334e6b !important;
+}
+html[data-theme="light"] .game-item .status,
+html[data-theme="light"] .game-item.available .status,
+html[data-theme="light"] .sectionHint{
+  color:#3d5570 !important;
+}
+html[data-theme="light"] .game-item .game-cta{
+  background:linear-gradient(135deg, #2b7fff, #1a9fc7) !important;
+  border-color:rgba(19,37,59,.12) !important;
+  color:#ffffff !important;
+  box-shadow:0 6px 14px rgba(43,127,255,.22);
+}
+html[data-theme="light"] .game-item.soon .game-cta{
+  background:rgba(19,37,59,.08) !important;
+  border-color:rgba(19,37,59,.16) !important;
+  color:#334e6b !important;
+  box-shadow:none;
+}
+html[data-theme="light"] .game-item .game-icon{
+  background:rgba(43,127,255,.08) !important;
+  border-color:rgba(43,127,255,.2) !important;
+}
+html[data-theme="light"] .pill,
+html[data-theme="light"] .kv b,
+html[data-theme="light"] .timeNum,
+html[data-theme="light"] .val,
+html[data-theme="light"] .mVal{
+  color:#13253b !important;
+}
+html[data-theme="light"] .btn.primary{
+  background:linear-gradient(135deg, rgba(43,127,255,.22), rgba(0,166,214,.16)) !important;
+  color:#0b3d7a !important;
 }
 
 /* ألعاب المطابقة (pairs / airlogo / similarity) */
