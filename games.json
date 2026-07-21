@@ -33,12 +33,12 @@
       "note": "لعبة الطيران"
     },
     {
-      "id": "game4",
-      "name": "اللعبة الرابعة",
-      "icon": "✨",
-      "href": "#",
-      "status": "soon",
-      "note": "قريباً"
+      "id": "cargodash",
+      "name": "شريط التفتيش",
+      "icon": "📦",
+      "href": "g3/cargo-dash.html",
+      "status": "live",
+      "note": "Cargo Dash — قبول/رفض شحنات"
     },
     {
       "id": "game5",

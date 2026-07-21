@@ -162,8 +162,15 @@ html[data-theme="light"] .grid .card.matched::before{
   opacity:.85;
 }
 html[data-theme="light"] .stage,
-html[data-theme="light"] .playArea{
-  background:transparent;
+html[data-theme="light"] .playArea,
+html[data-theme="light"] .cargo,
+html[data-theme="light"] .stat,
+html[data-theme="light"] .top,
+html[data-theme="light"] .lvl,
+html[data-theme="light"] .chart{
+  background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(244,248,255,.78)) !important;
+  color:var(--text);
+  border-color:rgba(19,37,59,.12) !important;
 }
 `;
 

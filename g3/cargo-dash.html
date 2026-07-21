@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("dgr-theme") || "dark");}catch(e){document.documentElement.setAttribute("data-theme","dark");}</script>
+<meta name="theme-color" content="#070B14"/>
+<title>📦 شريط التفتيش — Cargo Dash</title>
+<style>
+:root{
+  --bg0:#070B14; --bg1:#0B1220;
+  --stroke:rgba(255,255,255,.12);
+  --text:#EEF3FF;
+  --muted:rgba(238,243,255,.72);
+  --shadow:0 18px 55px rgba(0,0,0,.45);
+  --accent:#4facfe;
+  --ok:#16a34a;
+  --bad:#dc2626;
+}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial}
+html,body{height:100%;margin:0}
+body{
+  color:var(--text);
+  background:
+    radial-gradient(900px 480px at 12% 0%, rgba(79,172,254,.14), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  padding-bottom:env(safe-area-inset-bottom,0);
+}
+.app{
+  max-width:520px;
+  margin:0 auto;
+  min-height:100%;
+  min-height:100dvh;
+  padding:max(10px, env(safe-area-inset-top)) 14px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:10px 12px;border-radius:18px;border:1px solid var(--stroke);
+  background:linear-gradient(180deg, rgba(18,28,48,.94), rgba(8,14,26,.88));
+  box-shadow:var(--shadow);
+}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.brand .ico{
+  width:38px;height:38px;border-radius:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(79,172,254,.35);
+  background:linear-gradient(145deg, rgba(79,172,254,.22), rgba(0,242,254,.08));
+  font-size:18px;
+}
+.brand .t{font-weight:900;font-size:14px;line-height:1.2}
+.brand .s{font-size:11px;color:var(--muted)}
+.iconBtn{
+  width:40px;height:40px;border-radius:14px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+}
+.iconBtn:active{transform:scale(.97)}
+.stats{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;
+}
+.stat{
+  border-radius:16px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.04);padding:10px 8px;text-align:center;
+}
+.stat .lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
+.stat .val{font-size:20px;font-weight:950;font-variant-numeric:tabular-nums}
+.lives{letter-spacing:2px;color:#f87171}
+.stage{
+  flex:1;display:flex;flex-direction:column;gap:12px;
+  border-radius:22px;border:1px solid var(--stroke);
+  background:linear-gradient(180deg, rgba(18,28,48,.92), rgba(8,14,26,.86));
+  box-shadow:var(--shadow);padding:14px;min-height:340px;
+}
+.slotTitle{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px}
+.cargo{
+  border-radius:18px;border:2px solid rgba(255,255,255,.14);
+  padding:14px;display:flex;align-items:center;gap:12px;
+  background:rgba(5,10,20,.35);min-height:88px;
+  transition:border-color .15s, transform .15s, background .15s;
+}
+.cargo .emoji{font-size:36px;line-height:1}
+.cargo .meta{min-width:0}
+.cargo .code{font-size:22px;font-weight:950;letter-spacing:.04em}
+.cargo .desc{font-size:12px;color:var(--muted);margin-top:2px}
+.cargo.active{border-color:rgba(79,172,254,.55);box-shadow:0 0 0 1px rgba(79,172,254,.2) inset}
+.cargo.incoming{border-color:rgba(250,204,21,.45)}
+.cargo.flash-ok{border-color:rgba(34,197,94,.7);background:rgba(22,163,74,.15)}
+.cargo.flash-bad{border-color:rgba(239,68,68,.7);background:rgba(220,38,38,.15);animation:shake .35s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.belt{
+  position:relative;margin:4px 0 2px;height:44px;
+  border-radius:999px;border:1px dashed rgba(255,255,255,.18);
+  background:repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 14px, transparent 14px 28px);
+  overflow:hidden;
+}
+.belt .arrow{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.08em;
+}
+.timerBar{
+  height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;
+}
+.timerBar > i{
+  display:block;height:100%;width:100%;transform-origin:right center;
+  background:linear-gradient(90deg, #22c55e, #eab308, #ef4444);
+  transition:transform .05s linear;
+}
+.hint{
+  min-height:40px;font-size:13px;font-weight:700;color:var(--muted);
+  text-align:center;padding:6px 4px;
+}
+.hint.ok{color:#86efac}
+.hint.bad{color:#fca5a5}
+.actions{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.act{
+  min-height:58px;border-radius:18px;border:1px solid transparent;
+  font:inherit;font-size:16px;font-weight:900;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .12s, filter .12s, box-shadow .12s;
+  -webkit-tap-highlight-color:transparent;
+}
+.act:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.act:not(:disabled):active{transform:scale(.97)}
+.act.reject{background:linear-gradient(180deg,#ef4444,#b91c1c);color:#fff;box-shadow:0 8px 22px rgba(185,28,28,.35)}
+.act.ship{background:linear-gradient(180deg,#22c55e,#15803d);color:#fff;box-shadow:0 8px 22px rgba(21,128,61,.35)}
+.act:not(:disabled):hover{filter:brightness(1.06)}
+
+.overlay{
+  position:fixed;inset:0;z-index:40;
+  background:rgba(3,8,16,.72);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;padding:16px;
+}
+.overlay[hidden]{display:none !important}
+.card{
+  width:min(420px,100%);border-radius:22px;border:1px solid var(--stroke);
+  background:linear-gradient(180deg, rgba(22,36,58,.98), rgba(10,16,28,.95));
+  box-shadow:var(--shadow);padding:18px 16px;text-align:center;
+}
+.card h1{margin:0 0 8px;font-size:22px}
+.card p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.55}
+.levels{display:grid;gap:8px;margin-bottom:12px}
+.lvl{
+  border-radius:14px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);
+  padding:12px;cursor:pointer;text-align:right;font:inherit;color:var(--text);
+}
+.lvl:hover,.lvl:focus{border-color:rgba(79,172,254,.5);background:rgba(79,172,254,.08)}
+.lvl b{display:block;font-size:14px;margin-bottom:2px}
+.lvl span{font-size:12px;color:var(--muted)}
+.primary{
+  width:100%;min-height:48px;border:0;border-radius:14px;cursor:pointer;
+  font:inherit;font-weight:900;color:#041018;
+  background:linear-gradient(135deg,var(--accent),#00f2fe);
+}
+.primary:active{transform:scale(.98)}
+.chart{
+  margin-top:10px;text-align:right;font-size:11px;color:var(--muted);line-height:1.5;
+  max-height:140px;overflow:auto;border-radius:12px;border:1px solid var(--stroke);
+  padding:8px 10px;background:rgba(0,0,0,.2);
+}
+.chart b{color:var(--text)}
+</style>
+<script src="../theme.js"></script>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <div class="brand">
+        <div class="ico">📦</div>
+        <div>
+          <div class="t">شريط التفتيش</div>
+          <div class="s">Cargo Dash</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button type="button" class="iconBtn" id="themeBtn" data-theme-toggle title="السمة">☾</button>
+        <button type="button" class="iconBtn" id="pauseBtn" title="إيقاف">❚❚</button>
+        <a class="iconBtn" href="../index.html" title="الألعاب">🎮</a>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="lbl">النقاط</div><div class="val" id="scoreVal">0</div></div>
+      <div class="stat"><div class="lbl">المستوى</div><div class="val" id="levelVal">—</div></div>
+      <div class="stat"><div class="lbl">الحياة</div><div class="val lives" id="livesVal">♥♥♥</div></div>
+    </div>
+
+    <div class="stage">
+      <div>
+        <div class="slotTitle">الشحنة النشطة على المنصة</div>
+        <div class="cargo active" id="activeCargo"></div>
+      </div>
+      <div class="belt"><div class="arrow">◀◀◀ السير ◀◀◀</div></div>
+      <div>
+        <div class="slotTitle">الشحنة القادمة</div>
+        <div class="cargo incoming" id="incomingCargo"></div>
+      </div>
+      <div class="timerBar" aria-hidden="true"><i id="timerFill"></i></div>
+      <div class="hint" id="hint">قارن الشحنتين ثم اقبل أو ارفض</div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="act reject" id="rejectBtn">🔴 رفض · Reject</button>
+      <button type="button" class="act ship" id="shipBtn">🟢 قبول · Ship</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="startOverlay">
+    <div class="card">
+      <h1>📦 شريط التفتيش</h1>
+      <p>اقبل الشحنة إن لم يوجد تعارض فصل، وارفضها إن وُجدت قاعدة منع (X) حسب مخطط الفصل المبسط.</p>
+      <div class="levels">
+        <button type="button" class="lvl" data-level="trainee"><b>مبتدئ — Trainee Inspector</b><span>بطيء · رموز واضحة + تلميحات</span></button>
+        <button type="button" class="lvl" data-level="senior"><b>متوسط — Senior Cargo Officer</b><span>أسرع · رموز إضافية</span></button>
+        <button type="button" class="lvl" data-level="master"><b>خبير — Master Logistics</b><span>سريع جدًا · كل الفئات</span></button>
+      </div>
+      <div class="chart">
+        <b>قواعد الفصل (تدريب مبسّط):</b><br/>
+        AVI ↔ EAT / HUM / ICE · EAT ↔ HUM · Class 1 ↔ معظم الخطرة · Class 3 ↔ 2.1 و Class 1
+      </div>
+      <p style="margin-top:10px;margin-bottom:0" id="bestLine"></p>
+    </div>
+  </div>
+
+  <div class="overlay" id="pauseOverlay" hidden>
+    <div class="card">
+      <h1>❚❚ إيقاف مؤقت</h1>
+      <p>اللعبة متوقفة. يمكنك المتابعة أو العودة للقائمة.</p>
+      <button type="button" class="primary" id="resumeBtn">متابعة</button>
+      <button type="button" class="lvl" id="quitBtn" style="margin-top:8px;width:100%;text-align:center"><b>إنهاء الجولة</b></button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overOverlay" hidden>
+    <div class="card">
+      <h1 id="overTitle">انتهت الجولة</h1>
+      <p id="overMsg"></p>
+      <button type="button" class="primary" id="againBtn">لعب مرة أخرى</button>
+      <a class="lvl" href="../index.html" style="display:block;margin-top:8px;text-align:center;text-decoration:none"><b>العودة للألعاب</b></a>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  var CODES = {
+    C1:  { code: "C1",  label: "Class 1",  desc: "مواد متفجرة", emoji: "💥" },
+    C21: { code: "C21", label: "2.1",      desc: "غاز قابل للاشتعال", emoji: "🔥" },
+    C22: { code: "C22", label: "2.2",      desc: "غاز غير قابل للاشتعال", emoji: "💨" },
+    C3:  { code: "C3",  label: "Class 3",  desc: "سائل قابل للاشتعال", emoji: "🛢️" },
+    AVI: { code: "AVI", label: "AVI",      desc: "حيوانات حية", emoji: "🐶" },
+    EAT: { code: "EAT", label: "EAT",      desc: "مواد غذائية", emoji: "🍞" },
+    HUM: { code: "HUM", label: "HUM",      desc: "رفات بشرية", emoji: "⚰️" },
+    ICE: { code: "ICE", label: "ICE",      desc: "ثلج جاف", emoji: "🧊" }
+  };
+
+  // Undirected conflict set: "A|B" with A < B alphabetically
+  var CONFLICT_PAIRS = [
+    ["C1", "C21"], ["C1", "C22"], ["C1", "C3"], ["C1", "AVI"], ["C1", "EAT"], ["C1", "HUM"], ["C1", "ICE"],
+    ["C21", "C3"],
+    ["AVI", "EAT"], ["AVI", "HUM"], ["AVI", "ICE"],
+    ["EAT", "HUM"]
+  ];
+
+  var CONFLICT = {};
+  CONFLICT_PAIRS.forEach(function (p) {
+    var a = p[0], b = p[1];
+    CONFLICT[a + "|" + b] = 1;
+    CONFLICT[b + "|" + a] = 1;
+  });
+
+  function conflicts(a, b) {
+    if (!a || !b) return false;
+    if (a === b) return false;
+    return !!CONFLICT[a + "|" + b];
+  }
+
+  function reasonText(a, b) {
+    if (!conflicts(a, b)) return "لا يوجد تعارض فصل — يمكن القبول";
+    var A = CODES[a], B = CODES[b];
+    return "تعارض فصل: " + A.label + " × " + B.label + " — يجب الرفض";
+  }
+
+  var LEVELS = {
+    trainee: {
+      id: "trainee",
+      name: "مبتدئ",
+      pool: ["AVI", "EAT", "HUM", "ICE"],
+      decisionMs: 7000,
+      hints: true
+    },
+    senior: {
+      id: "senior",
+      name: "متوسط",
+      pool: ["AVI", "EAT", "HUM", "ICE", "C3", "C21", "C22"],
+      decisionMs: 4500,
+      hints: false
+    },
+    master: {
+      id: "master",
+      name: "خبير",
+      pool: Object.keys(CODES),
+      decisionMs: 2800,
+      hints: false
+    }
+  };
+
+  var HS_KEY = "cargoDashBest";
+
+  var state = {
+    level: null,
+    score: 0,
+    lives: 3,
+    active: null,
+    incoming: null,
+    playing: false,
+    paused: false,
+    deadline: 0,
+    decisionStart: 0,
+    raf: 0,
+    busy: false
+  };
+
+  var els = {
+    score: document.getElementById("scoreVal"),
+    level: document.getElementById("levelVal"),
+    lives: document.getElementById("livesVal"),
+    active: document.getElementById("activeCargo"),
+    incoming: document.getElementById("incomingCargo"),
+    timer: document.getElementById("timerFill"),
+    hint: document.getElementById("hint"),
+    ship: document.getElementById("shipBtn"),
+    reject: document.getElementById("rejectBtn"),
+    start: document.getElementById("startOverlay"),
+    pause: document.getElementById("pauseOverlay"),
+    over: document.getElementById("overOverlay"),
+    overTitle: document.getElementById("overTitle"),
+    overMsg: document.getElementById("overMsg"),
+    best: document.getElementById("bestLine")
+  };
+
+  function pick(pool) {
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function renderCargo(el, code) {
+    var c = CODES[code];
+    if (!c) {
+      el.innerHTML = "";
+      return;
+    }
+    el.innerHTML =
+      '<div class="emoji">' + c.emoji + "</div>" +
+      '<div class="meta"><div class="code">' + c.label + '</div><div class="desc">' + c.desc + "</div></div>";
+  }
+
+  function paintStats() {
+    els.score.textContent = String(state.score);
+    els.level.textContent = state.level ? state.level.name : "—";
+    els.lives.textContent = "♥".repeat(Math.max(0, state.lives)) + "♡".repeat(Math.max(0, 3 - state.lives));
+  }
+
+  function setHint(text, kind) {
+    els.hint.textContent = text || "";
+    els.hint.className = "hint" + (kind ? " " + kind : "");
+  }
+
+  function setButtons(on) {
+    els.ship.disabled = !on;
+    els.reject.disabled = !on;
+  }
+
+  function flash(el, ok) {
+    el.classList.remove("flash-ok", "flash-bad");
+    void el.offsetWidth;
+    el.classList.add(ok ? "flash-ok" : "flash-bad");
+    setTimeout(function () {
+      el.classList.remove("flash-ok", "flash-bad");
+    }, 380);
+  }
+
+  function readBest() {
+    try {
+      return JSON.parse(localStorage.getItem(HS_KEY) || "null");
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveBest() {
+    var prev = readBest() || { score: 0 };
+    if (state.score > (prev.score || 0)) {
+      localStorage.setItem(
+        HS_KEY,
+        JSON.stringify({ score: state.score, level: state.level && state.level.id, at: Date.now() })
+      );
+    }
+  }
+
+  function showBest() {
+    var b = readBest();
+    els.best.textContent = b && b.score
+      ? "أفضل نتيجة محلية: " + b.score + " نقطة"
+      : "لا توجد نتيجة محفوظة بعد";
+  }
+
+  function nextIncoming() {
+    var pool = state.level.pool;
+    var code = pick(pool);
+    // Avoid identical consecutive when possible
+    var guard = 0;
+    while (code === state.incoming && pool.length > 1 && guard++ < 8) code = pick(pool);
+    state.incoming = code;
+    renderCargo(els.incoming, code);
+    state.decisionStart = performance.now();
+    state.deadline = state.decisionStart + state.level.decisionMs;
+    if (state.level.hints) {
+      setHint(reasonText(state.active, state.incoming), conflicts(state.active, state.incoming) ? "bad" : "ok");
+    } else {
+      setHint("قرر بسرعة: قبول أو رفض");
+    }
+    setButtons(true);
+    state.busy = false;
+  }
+
+  function tick() {
+    if (!state.playing || state.paused) {
+      state.raf = requestAnimationFrame(tick);
+      return;
+    }
+    var now = performance.now();
+    var total = state.level.decisionMs;
+    var left = Math.max(0, state.deadline - now);
+    var ratio = left / total;
+    els.timer.style.transform = "scaleX(" + ratio + ")";
+    if (left <= 0 && !state.busy) {
+      missTimeout();
+    }
+    state.raf = requestAnimationFrame(tick);
+  }
+
+  function missTimeout() {
+    state.busy = true;
+    setButtons(false);
+    flash(els.incoming, false);
+    state.lives -= 1;
+    paintStats();
+    setHint("انتهى الوقت — يُحتسب خطأ", "bad");
+    afterMistake();
+  }
+
+  function afterMistake() {
+    if (state.lives <= 0) {
+      endGame(false);
+      return;
+    }
+    setTimeout(function () {
+      if (!state.playing) return;
+      nextIncoming();
+    }, 700);
+  }
+
+  function decide(wantShip) {
+    if (!state.playing || state.paused || state.busy) return;
+    state.busy = true;
+    setButtons(false);
+    var mustReject = conflicts(state.active, state.incoming);
+    var correct = wantShip ? !mustReject : mustReject;
+    var elapsed = performance.now() - state.decisionStart;
+    var fast = elapsed <= state.level.decisionMs * 0.45;
+
+    if (correct) {
+      var pts = fast ? 150 : 100;
+      state.score += pts;
+      paintStats();
+      flash(els.incoming, true);
+      setHint((wantShip ? "قبول صحيح" : "رفض صحيح") + " · +" + pts, "ok");
+      if (wantShip) {
+        state.active = state.incoming;
+        renderCargo(els.active, state.active);
+      }
+      setTimeout(function () {
+        if (!state.playing) return;
+        nextIncoming();
+      }, 450);
+    } else {
+      flash(els.incoming, false);
+      state.lives -= 1;
+      paintStats();
+      setHint(reasonText(state.active, state.incoming), "bad");
+      afterMistake();
+    }
+  }
+
+  function startLevel(id) {
+    state.level = LEVELS[id];
+    state.score = 0;
+    state.lives = 3;
+    state.playing = true;
+    state.paused = false;
+    state.busy = false;
+    state.active = pick(state.level.pool);
+    renderCargo(els.active, state.active);
+    paintStats();
+    els.start.hidden = true;
+    els.pause.hidden = true;
+    els.over.hidden = true;
+    nextIncoming();
+    cancelAnimationFrame(state.raf);
+    state.raf = requestAnimationFrame(tick);
+  }
+
+  function endGame() {
+    state.playing = false;
+    state.paused = false;
+    setButtons(false);
+    saveBest();
+    els.overTitle.textContent = "انتهت الجولة";
+    els.overMsg.textContent = "نتيجتك: " + state.score + " نقطة" + (state.level ? " · " + state.level.name : "");
+    els.over.hidden = false;
+    els.pause.hidden = true;
+  }
+
+  function togglePause() {
+    if (!state.playing) return;
+    state.paused = !state.paused;
+    els.pause.hidden = !state.paused;
+    if (state.paused) {
+      setButtons(false);
+    } else if (!state.busy) {
+      // give remaining time a small refresh cushion
+      var left = Math.max(800, state.deadline - performance.now());
+      state.deadline = performance.now() + left;
+      setButtons(true);
+    }
+  }
+
+  document.querySelectorAll("[data-level]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      startLevel(btn.getAttribute("data-level"));
+    });
+  });
+
+  els.ship.addEventListener("click", function () { decide(true); });
+  els.reject.addEventListener("click", function () { decide(false); });
+  document.getElementById("pauseBtn").addEventListener("click", togglePause);
+  document.getElementById("resumeBtn").addEventListener("click", togglePause);
+  document.getElementById("quitBtn").addEventListener("click", function () {
+    endGame();
+  });
+  document.getElementById("againBtn").addEventListener("click", function () {
+    els.over.hidden = true;
+    els.start.hidden = false;
+    showBest();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") decide(false);
+    if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") decide(true);
+    if (e.key === "Escape") togglePause();
+  });
+
+  // theme handled by theme.js via [data-theme-toggle]
+  document.getElementById("themeBtn");
+
+  setButtons(false);
+  showBest();
+  paintStats();
+})();
+</script>
+</body>
+</html>
