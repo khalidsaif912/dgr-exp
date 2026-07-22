@@ -73,12 +73,35 @@ function bestM1Row(rows) {
   };
 }
 
+function bestScoreRow(rows, gameId) {
+  const filtered = rows.filter((r) => r && r.gameId === gameId);
+  filtered.sort((a, b) => {
+    const sa = typeof a.scorePoints === "number" ? a.scorePoints : -1;
+    const sb = typeof b.scorePoints === "number" ? b.scorePoints : -1;
+    if (sa !== sb) return sb - sa;
+    const wa = typeof a.wrong === "number" ? a.wrong : 1e9;
+    const wb = typeof b.wrong === "number" ? b.wrong : 1e9;
+    if (wa !== wb) return wa - wb;
+    const ca = typeof a.correct === "number" ? a.correct : -1;
+    const cb = typeof b.correct === "number" ? b.correct : -1;
+    return cb - ca;
+  });
+  const top = filtered[0];
+  if (!top) return null;
+  const pts = typeof top.scorePoints === "number" ? top.scorePoints : 0;
+  return {
+    name: playerLabel(top.playerName),
+    label: `${pts} نقطة`,
+  };
+}
+
 function publish(scoresRows, m1Rows) {
   const detail = {
     pairs: bestTimeRow(scoresRows, "pairs"),
     similarity: bestTimeRow(scoresRows, "similarity"),
     airlogo: bestTimeRow(scoresRows, "airlogo"),
     m1quiz: bestM1Row(m1Rows),
+    cargodash: bestScoreRow(scoresRows, "cargodash"),
   };
   window.dispatchEvent(new CustomEvent("home-leaders", { detail }));
 }

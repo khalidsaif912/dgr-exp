@@ -250,6 +250,39 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
   align-items:center;justify-content:center;font-weight:900;color:#111;
   text-align:center;line-height:1.1;padding:4px;box-sizing:border-box;
 }
+.modal{
+  position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+  padding:16px;background:rgba(3,8,16,.75);backdrop-filter:blur(8px);
+}
+.modal.show{display:flex}
+.cardModal{
+  width:min(520px,100%);max-height:90vh;overflow:auto;border-radius:22px;
+  border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg,#1a2740,#0d1524);
+  box-shadow:var(--shadow);padding:16px;color:#f1f5f9;text-align:right;
+}
+.modalHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.modalHeader h2{margin:0;font-size:18px;color:#f8fafc}
+.xbtn{
+  border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);
+  color:#f8fafc;border-radius:12px;padding:8px 12px;cursor:pointer;font:inherit;font-weight:800;
+}
+.inputRow{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.inputRow input{
+  flex:1;min-width:140px;border-radius:12px;border:1px solid rgba(148,163,184,.4);
+  background:rgba(15,23,42,.8);color:#f8fafc;padding:10px 12px;font:inherit;
+}
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th,.table td{padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.1);text-align:right}
+.table th{color:#94a3b8;font-weight:800}
+.table td{color:#e2e8f0;font-weight:700}
+.small{font-size:12px;color:#94a3b8;font-weight:700}
+html[data-theme="light"] .cardModal,
+html[data-theme="light"] .modal .xbtn,
+html[data-theme="light"] .inputRow input{
+  background:linear-gradient(180deg,#1a2740,#0d1524) !important;
+  color:#f8fafc !important;
+  border-color:rgba(255,255,255,.18) !important;
+}
 </style>
 <script src="../theme.js"></script>
 </head>
@@ -265,6 +298,7 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
       </div>
       <div style="display:flex;gap:6px">
         <button type="button" class="iconBtn" id="themeBtn" data-theme-toggle title="السمة">☾</button>
+        <button type="button" class="iconBtn" id="boardBtn" title="المتصدرون">🏆</button>
         <button type="button" class="iconBtn" id="pauseBtn" title="إيقاف">❚❚</button>
         <a class="iconBtn" href="../index.html" title="الألعاب">🎮</a>
       </div>
@@ -330,11 +364,117 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     <div class="card" style="text-align:right">
       <h1 id="overTitle" style="text-align:center">انتهت الجولة</h1>
       <p id="overMsg" style="text-align:center"></p>
+      <div class="inputRow">
+        <input id="endPlayerName" placeholder="اكتب اسمك (اختياري)" maxlength="20"/>
+        <button type="button" class="primary" id="endSaveBtn" style="width:auto;min-width:120px;padding:0 14px">حفظ نتيجتي</button>
+      </div>
+      <div class="small" id="endBoardStatus" style="margin-bottom:8px;text-align:center">جاهز لحفظ النتيجة عالمياً</div>
       <div id="reviewBox" class="review"></div>
       <button type="button" class="primary" id="againBtn">لعب مرة أخرى</button>
       <a class="lvl" href="../index.html" style="display:block;margin-top:8px;text-align:center;text-decoration:none"><b>العودة للألعاب</b></a>
     </div>
   </div>
+
+  <div class="modal" id="boardModal" aria-hidden="true">
+    <div class="cardModal">
+      <div class="modalHeader">
+        <h2>🏆 أفضل النتائج — شريط التفتيش</h2>
+        <button type="button" class="xbtn" id="closeBoard">إغلاق</button>
+      </div>
+      <div class="small" id="boardStatus">جاري التحميل…</div>
+      <div class="inputRow">
+        <input id="playerName" placeholder="اكتب اسمك (اختياري)" maxlength="20"/>
+        <button type="button" class="primary" id="saveBtn" style="width:auto;min-width:120px;padding:0 14px">حفظ نتيجتي</button>
+      </div>
+      <table class="table">
+        <thead><tr><th>#</th><th>الاسم</th><th>النقاط</th><th>صحيح</th><th>خطأ</th><th>المستوى</th></tr></thead>
+        <tbody id="boardBody"><tr><td colspan="6" class="small">لم يتم التحميل بعد</td></tr></tbody>
+      </table>
+      <div class="small" style="margin-top:10px">الترتيب: أعلى نقاط ثم أقل أخطاء</div>
+    </div>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4wKBL-frMWN9Cw7uJFsyaHCk963JRUuA",
+    authDomain: "similarity-f2428.firebaseapp.com",
+    projectId: "similarity-f2428",
+    appId: "1:353323874706:web:7999c84682c30f6800694b",
+    storageBucket: "similarity-f2428.firebasestorage.app",
+    messagingSenderId: "353323874706",
+    measurementId: "G-X5E3CC8RZF"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  async function ensureLogin() {
+    if (auth.currentUser) return auth.currentUser;
+    const cred = await signInAnonymously(auth);
+    return cred.user;
+  }
+
+  async function saveScoreToFirestore(playerName, scorePoints, correct, wrong, level, noTimer) {
+    const user = await ensureLogin();
+    const doc = {
+      playerName: String(playerName ?? "").trim().slice(0, 20) || "لاعب",
+      scorePoints: Math.trunc(Number(scorePoints) || 0),
+      correct: Math.trunc(Number(correct) || 0),
+      wrong: Math.trunc(Number(wrong) || 0),
+      level: String(level || ""),
+      noTimer: !!noTimer,
+      gameId: "cargodash",
+      createdAt: serverTimestamp(),
+      uid: user.uid
+    };
+    if (doc.scorePoints < 0 || doc.scorePoints > 999999) throw new Error("نقاط خارج النطاق");
+    const ref = await addDoc(collection(db, "scores"), doc);
+    return ref.id;
+  }
+
+  async function fetchScores() {
+    const q = query(collection(db, "scores"), orderBy("createdAt", "desc"), limit(200));
+    const snap = await getDocs(q);
+    const rows = [];
+    snap.forEach((d) => rows.push(d.data()));
+    const filtered = rows.filter((r) => r && r.gameId === "cargodash");
+    filtered.sort((a, b) => {
+      const sa = typeof a.scorePoints === "number" ? a.scorePoints : -1;
+      const sb = typeof b.scorePoints === "number" ? b.scorePoints : -1;
+      if (sa !== sb) return sb - sa;
+      const wa = typeof a.wrong === "number" ? a.wrong : 1e9;
+      const wb = typeof b.wrong === "number" ? b.wrong : 1e9;
+      if (wa !== wb) return wa - wb;
+      const ca = typeof a.correct === "number" ? a.correct : -1;
+      const cb = typeof b.correct === "number" ? b.correct : -1;
+      return cb - ca;
+    });
+    return filtered.slice(0, 20);
+  }
+
+  window.saveScoreToFirestore = async (playerName, scorePoints, correct, wrong, level, noTimer) => {
+    try {
+      const id = await saveScoreToFirestore(playerName, scorePoints, correct, wrong, level, noTimer);
+      return { ok: true, id };
+    } catch (e) {
+      return { ok: false, error: e?.message || String(e) };
+    }
+  };
+
+  window.fetchScores = async () => {
+    try {
+      const rows = await fetchScores();
+      return { ok: true, rows };
+    } catch (e) {
+      return { ok: false, error: e?.message || String(e), rows: [] };
+    }
+  };
+</script>
 
 <script>
 (function () {
@@ -526,6 +666,7 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     raf: 0,
     busy: false,
     mistakes: [],
+    correct: 0,
     seenPairs: {},
     turnsOnActive: 0,
     round: 0
@@ -786,6 +927,7 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     if (correct) {
       var pts = fast ? 150 : 100;
       state.score += pts;
+      state.correct += 1;
       paintStats();
       flash(els.incoming, true);
       setHint((wantShip ? "قبول صحيح" : "رفض صحيح") + " · +" + pts, "ok");
@@ -869,6 +1011,7 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     state.score = 0;
     state.lives = 3;
     state.mistakes = [];
+    state.correct = 0;
     state.seenPairs = {};
     state.turnsOnActive = 0;
     state.round = 0;
@@ -886,6 +1029,99 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     state.raf = requestAnimationFrame(tick);
   }
 
+  function levelLabel(id) {
+    return (LEVELS[id] && LEVELS[id].name) || id || "—";
+  }
+
+  function renderBoardRows(tbody, rows) {
+    if (!tbody) return;
+    if (!rows || !rows.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="small">لا توجد نتائج بعد</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows
+      .map(function (r, i) {
+        var name = String(r.playerName || "لاعب").slice(0, 20);
+        var pts = Math.trunc(Number(r.scorePoints) || 0);
+        var ok = Math.trunc(Number(r.correct) || 0);
+        var bad = Math.trunc(Number(r.wrong) || 0);
+        var lvl = levelLabel(r.level) + (r.noTimer ? " · بلا وقت" : "");
+        return (
+          "<tr><td>" +
+          (i + 1) +
+          "</td><td>" +
+          name +
+          "</td><td>" +
+          pts +
+          "</td><td>" +
+          ok +
+          "</td><td>" +
+          bad +
+          "</td><td>" +
+          lvl +
+          "</td></tr>"
+        );
+      })
+      .join("");
+  }
+
+  async function refreshBoard(statusEl, tbody) {
+    if (statusEl) statusEl.textContent = "جاري التحميل…";
+    if (!window.fetchScores) {
+      if (statusEl) statusEl.textContent = "تعذر الاتصال بسجل النتائج";
+      return;
+    }
+    var res = await window.fetchScores();
+    if (!res || !res.ok) {
+      if (statusEl) statusEl.textContent = "تعذر التحميل: " + ((res && res.error) || "");
+      return;
+    }
+    renderBoardRows(tbody, res.rows || []);
+    if (statusEl) statusEl.textContent = "تم التحديث · أفضل " + (res.rows || []).length + " نتيجة";
+  }
+
+  async function saveCurrentScore(nameEl, statusEl, tbody) {
+    if (!window.saveScoreToFirestore) {
+      if (statusEl) statusEl.textContent = "تعذر الحفظ — حاول لاحقاً";
+      return;
+    }
+    if (state.score <= 0) {
+      if (statusEl) statusEl.textContent = "لا توجد نقاط للحفظ بعد";
+      return;
+    }
+    var name = (nameEl && nameEl.value) || "";
+    if (statusEl) statusEl.textContent = "جاري الحفظ…";
+    var res = await window.saveScoreToFirestore(
+      name,
+      state.score,
+      state.correct,
+      state.mistakes.length,
+      state.level && state.level.id,
+      state.noTimer
+    );
+    if (!res || !res.ok) {
+      if (statusEl) statusEl.textContent = "فشل الحفظ: " + ((res && res.error) || "");
+      return;
+    }
+    if (statusEl) statusEl.textContent = "تم حفظ نتيجتك في السجل العالمي ✅";
+    await refreshBoard(statusEl, tbody);
+  }
+
+  function openBoard() {
+    var modal = document.getElementById("boardModal");
+    if (!modal) return;
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+    refreshBoard(document.getElementById("boardStatus"), document.getElementById("boardBody"));
+  }
+
+  function closeBoard() {
+    var modal = document.getElementById("boardModal");
+    if (!modal) return;
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+  }
+
   function endGame() {
     state.playing = false;
     state.paused = false;
@@ -895,10 +1131,13 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     els.overMsg.textContent =
       "نتيجتك: " + state.score + " نقطة" +
       (state.level ? " · " + state.level.name : "") +
+      " · صحيح: " + state.correct +
       " · أخطاء: " + state.mistakes.length;
     renderReview();
     els.over.hidden = false;
     els.pause.hidden = true;
+    var endStatus = document.getElementById("endBoardStatus");
+    if (endStatus) endStatus.textContent = "يمكنك حفظ نتيجتك في سجل الفائزين";
   }
 
   function togglePause() {
@@ -929,11 +1168,33 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     els.start.hidden = false;
     showBest();
   });
+  document.getElementById("boardBtn").addEventListener("click", openBoard);
+  document.getElementById("closeBoard").addEventListener("click", closeBoard);
+  document.getElementById("boardModal").addEventListener("click", function (e) {
+    if (e.target === e.currentTarget) closeBoard();
+  });
+  document.getElementById("saveBtn").addEventListener("click", function () {
+    saveCurrentScore(
+      document.getElementById("playerName"),
+      document.getElementById("boardStatus"),
+      document.getElementById("boardBody")
+    );
+  });
+  document.getElementById("endSaveBtn").addEventListener("click", function () {
+    saveCurrentScore(
+      document.getElementById("endPlayerName"),
+      document.getElementById("endBoardStatus"),
+      document.getElementById("boardBody")
+    );
+  });
 
   document.addEventListener("keydown", function (e) {
     if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") decide(false);
     if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") decide(true);
-    if (e.key === "Escape") togglePause();
+    if (e.key === "Escape") {
+      if (document.getElementById("boardModal").classList.contains("show")) closeBoard();
+      else togglePause();
+    }
   });
 
   setButtons(false);
