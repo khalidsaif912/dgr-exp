@@ -178,22 +178,41 @@ html[data-theme="light"] .sideBrand{
 }
 .errCard .pair .mini img{width:100%;height:100%;object-fit:contain;display:block}
 .optRow{
-  display:flex;align-items:center;justify-content:flex-start;gap:10px;
+  display:flex;align-items:center;justify-content:flex-start;gap:12px;
   margin:0 0 12px;padding:12px 14px;border-radius:14px;
-  border:1px solid rgba(125,211,252,.4);
-  background:rgba(14,116,144,.28);
-  font-size:14px;font-weight:800;color:#e0f2fe;
-  text-align:right;direction:rtl;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(30,41,59,.55);
+  font-size:14px;font-weight:800;color:#94a3b8;
+  text-align:right;direction:rtl;cursor:pointer;
+  transition:border-color .18s, background .18s, color .18s, box-shadow .18s;
+  -webkit-tap-highlight-color:transparent;user:select:none;
 }
-.optRow label{color:#e0f2fe;cursor:pointer;line-height:1.4;flex:1;min-width:0}
-.optRow input{width:18px;height:18px;accent-color:#38bdf8;flex-shrink:0}
+.optRow:hover{border-color:rgba(125,211,252,.45)}
+.optRow.is-on{
+  color:#e0f2fe;
+  border-color:rgba(125,211,252,.55);
+  background:rgba(14,116,144,.32);
+  box-shadow:0 0 0 1px rgba(56,189,248,.18) inset;
+}
+.optRow .optLabel{flex:1;min-width:0;line-height:1.4;text-align:right}
 .optIcon,.lvlIcon{
   width:40px;height:40px;border-radius:12px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  border:1px solid rgba(255,255,255,.2);
-  box-shadow:0 4px 12px rgba(0,0,0,.2);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 4px 12px rgba(0,0,0,.18);
+  transition:filter .18s, opacity .18s, background .18s, transform .18s;
 }
-.optIcon{background:linear-gradient(160deg,#7dd3fc,#0ea5e9)}
+.optIcon{
+  background:linear-gradient(160deg,#64748b,#475569);
+  filter:grayscale(1) saturate(.2) brightness(.85);
+  opacity:.72;
+}
+.optRow.is-on .optIcon{
+  background:linear-gradient(160deg,#7dd3fc,#0ea5e9);
+  filter:none;
+  opacity:1;
+  transform:scale(1.04);
+}
 .optIcon svg,.lvlIcon svg{width:26px;height:26px;display:block}
 .lvlIcon--trainee{background:linear-gradient(160deg,#86efac,#22c55e)}
 .lvlIcon--senior{background:linear-gradient(160deg,#fde68a,#f59e0b)}
@@ -322,11 +341,16 @@ html[data-theme="light"] .overlay .lvl{
 html[data-theme="light"] .overlay .lvl b{color:#f8fafc !important}
 html[data-theme="light"] .overlay .lvl span{color:#94a3b8 !important}
 html[data-theme="light"] .overlay .optRow{
-  background:rgba(14,116,144,.28) !important;
-  color:#e0f2fe !important;
-  border-color:rgba(125,211,252,.4) !important;
+  background:rgba(30,41,59,.55) !important;
+  color:#94a3b8 !important;
+  border-color:rgba(148,163,184,.35) !important;
 }
-html[data-theme="light"] .overlay .optRow label{color:#e0f2fe !important}
+html[data-theme="light"] .overlay .optRow.is-on{
+  background:rgba(14,116,144,.32) !important;
+  color:#e0f2fe !important;
+  border-color:rgba(125,211,252,.55) !important;
+}
+html[data-theme="light"] .overlay .optRow .optLabel{color:inherit !important}
 html[data-theme="light"] .overlay .chart{
   background:rgba(2,6,23,.6) !important;
   color:#cbd5e1 !important;
@@ -483,13 +507,12 @@ html[data-theme="light"] .inputRow input{
     <div class="card">
       <h1>📦 شريط التفتيش</h1>
       <p>تدرّب على قرارات القبول/الرفض حسب ملصقات IATA وقواعد الفصل داخل الحاوية الواحدة، مع الانتباه لشحنات <b>Cargo Aircraft Only</b>.</p>
-      <div class="optRow">
-        <input type="checkbox" id="noTimerOpt" />
+      <button type="button" class="optRow" id="noTimerOpt" aria-pressed="false">
         <span class="optIcon" aria-hidden="true">
           <svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="22" fill="#e0f2fe" stroke="#0f172a" stroke-width="3"/><path d="M32 18v16l10 6" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 14l6 2-2 6" stroke="#f97316" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M48 16l8 8" stroke="#f97316" stroke-width="3" stroke-linecap="round"/></svg>
         </span>
-        <label for="noTimerOpt">لعب بدون وقت (تدريب بدون ضغط المؤقت)</label>
-      </div>
+        <span class="optLabel">لعب بدون وقت (تدريب بدون ضغط المؤقت)</span>
+      </button>
       <div class="levels">
         <button type="button" class="lvl" data-level="trainee">
           <span class="lvlIcon lvlIcon--trainee" aria-hidden="true">
@@ -1282,7 +1305,7 @@ html[data-theme="light"] .inputRow input{
 
   function startLevel(id) {
     state.level = LEVELS[id];
-    state.noTimer = !!(document.getElementById("noTimerOpt") && document.getElementById("noTimerOpt").checked);
+    state.noTimer = !!(document.getElementById("noTimerOpt") && document.getElementById("noTimerOpt").classList.contains("is-on"));
     state.score = 0;
     state.lives = 3;
     state.mistakes = [];
@@ -1444,6 +1467,15 @@ html[data-theme="light"] .inputRow input{
       startLevel(btn.getAttribute("data-level"));
     });
   });
+
+  var noTimerBtn = document.getElementById("noTimerOpt");
+  if (noTimerBtn) {
+    noTimerBtn.addEventListener("click", function () {
+      var on = !noTimerBtn.classList.contains("is-on");
+      noTimerBtn.classList.toggle("is-on", on);
+      noTimerBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
 
   els.ship.addEventListener("click", function () { decide(true); });
   els.reject.addEventListener("click", function () { decide(false); });
