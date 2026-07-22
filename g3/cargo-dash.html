@@ -513,7 +513,10 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     decisionStart: 0,
     raf: 0,
     busy: false,
-    mistakes: []
+    mistakes: [],
+    seenPairs: {},
+    turnsOnActive: 0,
+    round: 0
   };
 
   var els = {
@@ -535,8 +538,102 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     best: document.getElementById("bestLine")
   };
 
-  function pick(pool) {
-    return pool[Math.floor(Math.random() * pool.length)];
+  function pick(pool, avoid) {
+    var opts = pool.filter(function (c) {
+      return !avoid || avoid.indexOf(c) === -1;
+    });
+    if (!opts.length) opts = pool.slice();
+    return opts[Math.floor(Math.random() * opts.length)];
+  }
+
+  function pairSeenKey(a, b) {
+    return a + ">" + b;
+  }
+
+  function markPairSeen(a, b) {
+    state.seenPairs[pairSeenKey(a, b)] = 1;
+  }
+
+  function buildCandidates(pool, active) {
+    var conflict = [];
+    var safe = [];
+    pool.forEach(function (code) {
+      if (code === active) return;
+      var key = pairSeenKey(active, code);
+      var item = { code: code, key: key, conflict: conflicts(active, code) };
+      if (item.conflict) conflict.push(item);
+      else safe.push(item);
+    });
+    return { conflict: conflict, safe: safe };
+  }
+
+  function chooseIncoming(pool, active) {
+    var bags = buildCandidates(pool, active);
+    var unusedConflict = bags.conflict.filter(function (x) {
+      return !state.seenPairs[x.key];
+    });
+    var unusedSafe = bags.safe.filter(function (x) {
+      return !state.seenPairs[x.key];
+    });
+
+    // Prefer unused pairs first (mix conflict + safe), then fall back and reset memory.
+    var unused = unusedConflict.concat(unusedSafe);
+    if (!unused.length) {
+      state.seenPairs = {};
+      unused = bags.conflict.concat(bags.safe);
+    }
+
+    // Keep some learning conflicts (~35%) but never stuck on same pair.
+    var preferConflict = Math.random() < 0.35 && unusedConflict.length;
+    var poolPick = preferConflict
+      ? unusedConflict
+      : unusedSafe.length
+        ? unusedSafe.concat(unusedConflict)
+        : unused;
+
+    // Avoid immediate repeat of last incoming when possible.
+    var filtered = poolPick.filter(function (x) {
+      return x.code !== state.incoming;
+    });
+    if (!filtered.length) filtered = poolPick;
+    return filtered[Math.floor(Math.random() * filtered.length)].code;
+  }
+
+  function maybeRotateActive(pool) {
+    state.turnsOnActive += 1;
+    // Change platform cargo every 2 turns so questions don't feel stuck.
+    if (state.turnsOnActive >= 2) {
+      var next = pick(pool, [state.active, state.incoming]);
+      state.active = next;
+      state.turnsOnActive = 0;
+      renderCargo(els.active, state.active);
+    }
+  }
+
+  function nextIncoming() {
+    var pool = state.level.pool;
+    maybeRotateActive(pool);
+    var code = chooseIncoming(pool, state.active);
+    markPairSeen(state.active, code);
+    state.incoming = code;
+    state.round += 1;
+    renderCargo(els.incoming, code);
+    state.decisionStart = performance.now();
+    if (state.noTimer) {
+      state.deadline = Infinity;
+      els.timer.style.transform = "scaleX(1)";
+      document.querySelector(".timerBar").classList.add("hidden");
+    } else {
+      state.deadline = state.decisionStart + state.level.decisionMs;
+      document.querySelector(".timerBar").classList.remove("hidden");
+    }
+    if (state.level.hints) {
+      setHint(reasonText(state.active, state.incoming), conflicts(state.active, state.incoming) ? "bad" : "ok");
+    } else {
+      setHint("هل يُسمح بتحميلهما في حاوية واحدة؟ انتبه لـ CAO");
+    }
+    setButtons(true);
+    state.busy = false;
   }
 
   function renderCargo(el, code) {
@@ -619,43 +716,6 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
       : "لا توجد نتيجة محفوظة بعد";
   }
 
-  function nextIncoming() {
-    var pool = state.level.pool;
-    var code = pick(pool);
-    var guard = 0;
-    while (code === state.incoming && pool.length > 1 && guard++ < 8) code = pick(pool);
-    // Bias towards conflict pairs for learning (~45%)
-    if (Math.random() < 0.45) {
-      var keys = Object.keys(RULES).filter(function (k) {
-        var parts = k.split("|");
-        return pool.indexOf(parts[0]) >= 0 && pool.indexOf(parts[1]) >= 0 &&
-          (parts[0] === state.active || parts[1] === state.active);
-      });
-      if (keys.length) {
-        var pair = keys[Math.floor(Math.random() * keys.length)].split("|");
-        code = pair[0] === state.active ? pair[1] : pair[0];
-      }
-    }
-    state.incoming = code;
-    renderCargo(els.incoming, code);
-    state.decisionStart = performance.now();
-    if (state.noTimer) {
-      state.deadline = Infinity;
-      els.timer.style.transform = "scaleX(1)";
-      document.querySelector(".timerBar").classList.add("hidden");
-    } else {
-      state.deadline = state.decisionStart + state.level.decisionMs;
-      document.querySelector(".timerBar").classList.remove("hidden");
-    }
-    if (state.level.hints) {
-      setHint(reasonText(state.active, state.incoming), conflicts(state.active, state.incoming) ? "bad" : "ok");
-    } else {
-      setHint("هل يُسمح بتحميلهما في حاوية واحدة؟ انتبه لـ CAO");
-    }
-    setButtons(true);
-    state.busy = false;
-  }
-
   function tick() {
     if (!state.playing || state.paused) {
       state.raf = requestAnimationFrame(tick);
@@ -718,7 +778,11 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
       setHint((wantShip ? "قبول صحيح" : "رفض صحيح") + " · +" + pts, "ok");
       if (wantShip) {
         state.active = state.incoming;
+        state.turnsOnActive = 0;
         renderCargo(els.active, state.active);
+      } else {
+        // After a correct reject, still rotate platform soon via maybeRotateActive.
+        state.turnsOnActive += 0;
       }
       setTimeout(function () {
         if (!state.playing) return;
@@ -792,6 +856,9 @@ html[data-theme="light"] .overlay #bestLine{color:#e2e8f0 !important}
     state.score = 0;
     state.lives = 3;
     state.mistakes = [];
+    state.seenPairs = {};
+    state.turnsOnActive = 0;
+    state.round = 0;
     state.playing = true;
     state.paused = false;
     state.busy = false;
