@@ -74,12 +74,30 @@ body{
   transition:border-color .15s, transform .15s, background .15s;
 }
 .cargo .labelWrap{
-  width:72px;height:72px;flex-shrink:0;
+  width:78px;height:78px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;border-radius:10px;padding:4px;
+  border:1px solid rgba(255,255,255,.2);
+}
+.cargo .labelWrap img{
+  width:100%;height:100%;object-fit:contain;display:block;
+}
+.cargo .labelWrap .hdl{
+  width:100%;height:100%;
+}
+.errCard .pair .mini{
+  width:56px;height:56px;background:#fff;border-radius:8px;padding:3px;
   display:flex;align-items:center;justify-content:center;
 }
-.cargo .labelWrap svg,.cargo .labelWrap .hdl{
-  width:72px;height:72px;display:block;
+.errCard .pair .mini img{width:100%;height:100%;object-fit:contain;display:block}
+.optRow{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:0 0 12px;padding:10px 12px;border-radius:14px;
+  border:1px solid var(--stroke);background:rgba(255,255,255,.04);
+  font-size:13px;font-weight:800;color:var(--text);
 }
+.optRow input{width:18px;height:18px;accent-color:#4facfe}
+.timerBar.hidden{visibility:hidden;height:6px}
 .cargo .meta{min-width:0;flex:1}
 .cargo .code{font-size:18px;font-weight:950;letter-spacing:.03em}
 .cargo .desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35}
@@ -237,17 +255,18 @@ body{
     <div class="card">
       <h1>📦 شريط التفتيش</h1>
       <p>تدرّب على قرارات القبول/الرفض حسب ملصقات IATA وقواعد الفصل داخل الحاوية الواحدة، مع الانتباه لشحنات <b>Cargo Aircraft Only</b>.</p>
+      <div class="optRow">
+        <input type="checkbox" id="noTimerOpt" />
+        <label for="noTimerOpt">لعب بدون وقت (تدريب بدون ضغط المؤقت)</label>
+      </div>
       <div class="levels">
-        <button type="button" class="lvl" data-level="trainee"><b>مبتدئ — Trainee Inspector</b><span>بطيء · ملصقات واضحة + تلميحات</span></button>
-        <button type="button" class="lvl" data-level="senior"><b>متوسط — Senior Cargo Officer</b><span>أسرع · كلاسات خطرة + CAO</span></button>
-        <button type="button" class="lvl" data-level="master"><b>خبير — Master Logistics</b><span>سريع جدًا · كل الملصقات</span></button>
+        <button type="button" class="lvl" data-level="trainee"><b>مبتدئ — Trainee Inspector</b><span>رموز واضحة + تلميحات</span></button>
+        <button type="button" class="lvl" data-level="senior"><b>متوسط — Senior Cargo Officer</b><span>كلاسات خطرة + CAO</span></button>
+        <button type="button" class="lvl" data-level="master"><b>خبير — Master Logistics</b><span>كل الملصقات</span></button>
       </div>
       <div class="chart">
-        <b>ركّز على:</b><br/>
-        • لا تضع في حاوية واحدة ما عليه تعارض فصل (X)<br/>
-        • AVI لا مع EAT / HUM / ICE<br/>
-        • Class 1 حساس جداً مع معظم المواد الخطرة<br/>
-        • ملصق <b>CAO</b> = طائرة شحن فقط — لا على ركاب
+        <b>ملصقات الرتب:</b> من مرجع <a href="https://log.logcluster.org/ar/anwa-almwad-alkhtrt-walbday-alkhtrt" target="_blank" rel="noopener" style="color:#7dd3fc">Logistics Cluster</a><br/>
+        <b>ركّز على:</b> فصل الحاوية الواحدة · التعارض · CAO طائرة شحن فقط
       </div>
       <p style="margin-top:10px;margin-bottom:0" id="bestLine"></p>
     </div>
@@ -276,43 +295,21 @@ body{
 (function () {
   "use strict";
 
-  /* —— IATA-style hazard diamonds + handling labels (training visuals) —— */
-  function diamondSvg(bg, symbol, classNo, line) {
-    line = line || "#000";
-    return (
-      '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-      '<polygon points="50,4 96,50 50,96 4,50" fill="' + bg + '" stroke="#111" stroke-width="3"/>' +
-      '<polygon points="50,12 88,50 50,88 12,50" fill="none" stroke="' + line + '" stroke-width="2"/>' +
-      symbol +
-      '<text x="50" y="86" text-anchor="middle" font-size="16" font-weight="800" font-family="Arial,sans-serif" fill="#111">' +
-      classNo +
-      "</text></svg>"
-    );
-  }
-
-  function flameSymbol() {
-    return '<path d="M50 22c6 10 2 16-1 20 8 0 14 7 14 15 0 10-8 17-13 17s-13-7-13-17c0-6 3-10 6-13-4 1-7-2-5-8 3-2 8-6 12-14z" fill="#111"/>';
-  }
-
-  function bombSymbol() {
-    return (
-      '<g fill="#111">' +
-      '<circle cx="50" cy="48" r="14"/>' +
-      '<rect x="46" y="28" width="8" height="8" rx="1"/>' +
-      '<path d="M54 28c6-2 10-8 10-8M42 34c-5 0-9-4-9-4" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>' +
-      '<path d="M50 62l-10 8M50 62l10 8M40 50h-10M70 50H60M43 40l-8-8M57 40l8-8" stroke="#111" stroke-width="2" stroke-linecap="round"/>' +
-      "</g>"
-    );
-  }
-
-  function cylinderSymbol() {
-    return (
-      '<g fill="none" stroke="#111" stroke-width="3">' +
-      '<rect x="40" y="30" width="20" height="36" rx="6"/>' +
-      '<path d="M44 30c0-4 12-4 12 0M44 66c0 4 12 4 12 0"/>' +
-      "</g>"
-    );
-  }
+  /* Label images from Logistics Cluster (UN DG labels) — local copies */
+  var LABEL_IMG = {
+    C1:  "labels/c1.jpg",
+    C21: "labels/c21.jpg",
+    C22: "labels/c22.jpg",
+    C23: "labels/c23.jpg",
+    C3:  "labels/c3.jpg",
+    C41: "labels/c41.jpg",
+    C51: "labels/c51.jpg",
+    C52: "labels/c52.jpg",
+    C61: "labels/c61.jpg",
+    C62: "labels/c62.jpg",
+    C8:  "labels/c8.jpg",
+    C9:  "labels/c9.jpg"
+  };
 
   function handlingBox(bg, top, mid, bot) {
     return (
@@ -324,21 +321,16 @@ body{
   }
 
   function labelMarkup(code) {
+    if (LABEL_IMG[code]) {
+      return (
+        '<img src="' +
+        LABEL_IMG[code] +
+        '" alt="' +
+        code +
+        '" loading="lazy" decoding="async"/>'
+      );
+    }
     switch (code) {
-      case "C1":
-        return diamondSvg("#F7931E", bombSymbol(), "1");
-      case "C21":
-        return diamondSvg("#E31C23", flameSymbol(), "2");
-      case "C22":
-        return diamondSvg("#00A651", cylinderSymbol(), "2");
-      case "C3":
-        return diamondSvg("#E31C23", flameSymbol(), "3");
-      case "C51":
-        return diamondSvg(
-          "#F7E517",
-          '<g fill="#111"><circle cx="42" cy="40" r="7"/><circle cx="58" cy="40" r="7"/><circle cx="50" cy="54" r="7"/><text x="50" y="46" text-anchor="middle" font-size="10" font-weight="900" fill="#F7E517">O</text></g>',
-          "5.1"
-        );
       case "CAO":
         return (
           '<div class="hdl" style="background:#fff;border-color:#111">' +
@@ -362,16 +354,23 @@ body{
   }
 
   var CODES = {
-    C1:  { code: "C1",  label: "Class 1",  desc: "متفجرات — ملصق IATA برتقالي", kind: "hazard", caoOften: true },
-    C21: { code: "C21", label: "Div 2.1",  desc: "غاز قابل للاشتعال — ملصق أحمر", kind: "hazard" },
-    C22: { code: "C22", label: "Div 2.2",  desc: "غاز غير قابل للاشتعال — ملصق أخضر", kind: "hazard" },
-    C3:  { code: "C3",  label: "Class 3",  desc: "سائل قابل للاشتعال — ملصق أحمر", kind: "hazard" },
-    C51: { code: "C51", label: "Div 5.1",  desc: "مؤكسد — ملصق أصفر", kind: "hazard" },
-    CAO: { code: "CAO", label: "CAO",      desc: "طائرة شحن فقط — Handling Label", kind: "cao", caoOnly: true },
-    AVI: { code: "AVI", label: "AVI",      desc: "حيوانات حية — ملصق مناولة", kind: "handling" },
-    EAT: { code: "EAT", label: "EAT",      desc: "مواد غذائية — ملصق مناولة", kind: "handling" },
-    HUM: { code: "HUM", label: "HUM",      desc: "رفات بشرية — ملصق مناولة", kind: "handling" },
-    ICE: { code: "ICE", label: "ICE",      desc: "ثلج جاف — يحتاج تهوية", kind: "handling" }
+    C1:  { code: "C1",  label: "Class 1",  desc: "متفجرات — ملصق الأمم المتحدة", kind: "hazard", caoOften: true },
+    C21: { code: "C21", label: "Div 2.1",  desc: "غاز قابل للاشتعال", kind: "hazard" },
+    C22: { code: "C22", label: "Div 2.2",  desc: "غاز غير قابل للاشتعال", kind: "hazard" },
+    C23: { code: "C23", label: "Div 2.3",  desc: "غاز سام", kind: "hazard", caoOften: true },
+    C3:  { code: "C3",  label: "Class 3",  desc: "سائل قابل للاشتعال", kind: "hazard" },
+    C41: { code: "C41", label: "Div 4.1",  desc: "مادة صلبة قابلة للاشتعال", kind: "hazard" },
+    C51: { code: "C51", label: "Div 5.1",  desc: "مادة مؤكسِدة", kind: "hazard" },
+    C52: { code: "C52", label: "Div 5.2",  desc: "أكاسيد فوق عضوية", kind: "hazard" },
+    C61: { code: "C61", label: "Div 6.1",  desc: "مادة سامة", kind: "hazard" },
+    C62: { code: "C62", label: "Div 6.2",  desc: "مادة مُعدية", kind: "hazard" },
+    C8:  { code: "C8",  label: "Class 8",  desc: "مادة مُسببة للتآكل", kind: "hazard" },
+    C9:  { code: "C9",  label: "Class 9",  desc: "مواد خطرة متنوعة", kind: "hazard" },
+    CAO: { code: "CAO", label: "CAO",      desc: "طائرة شحن فقط — Handling", kind: "cao", caoOnly: true },
+    AVI: { code: "AVI", label: "AVI",      desc: "حيوانات حية — مناولة", kind: "handling" },
+    EAT: { code: "EAT", label: "EAT",      desc: "مواد غذائية — مناولة", kind: "handling" },
+    HUM: { code: "HUM", label: "HUM",      desc: "رفات بشرية — مناولة", kind: "handling" },
+    ICE: { code: "ICE", label: "ICE",      desc: "ثلج جاف — تهوية", kind: "handling" }
   };
 
   /**
@@ -381,8 +380,13 @@ body{
   var RULES = {
     "C1|C21": { tag: "فصل في الحاوية", lesson: "Class 1 لا يُحمَّل مع غازات قابلة للاشتعال (2.1) في نفس الحاوية/القرب المحظور." },
     "C1|C22": { tag: "فصل في الحاوية", lesson: "المتفجرات (Class 1) تُفصل عن معظم الغازات — لا تضعها معاً في ULD واحد بلا فصل معتمد." },
+    "C1|C23": { tag: "فصل في الحاوية", lesson: "Class 1 × غاز سام (2.3): لا تجمعهما في حاوية واحدة." },
     "C1|C3":  { tag: "فصل في الحاوية", lesson: "Class 1 × Class 3: خطر اشتعال/انفجار — ممنوع الجوار في نفس الحاوية." },
+    "C1|C41": { tag: "فصل في الحاوية", lesson: "المتفجرات والمواد الصلبة القابلة للاشتعال (4.1) غير متوافقة للتحميل المشترك." },
     "C1|C51": { tag: "فصل في الحاوية", lesson: "المتفجرات والمؤكسدات (5.1) غير متوافقة — لا تجمعهما في تحميل واحد." },
+    "C1|C52": { tag: "فصل في الحاوية", lesson: "Class 1 × 5.2: فصل إلزامي داخل الحاوية." },
+    "C1|C61": { tag: "فصل في الحاوية", lesson: "المتفجرات والمواد السامة (6.1) لا تُحمَّل معاً بلا فصل." },
+    "C1|C8":  { tag: "فصل في الحاوية", lesson: "Class 1 × المواد المسببة للتآكل (8): لا في حاوية واحدة." },
     "C1|AVI": { tag: "سلامة التحميل", lesson: "لا تجمع المتفجرات مع الحيوانات الحية في نفس الحاوية." },
     "C1|EAT": { tag: "سلامة التحميل", lesson: "المتفجرات والأغذية لا تُحمَّل معاً في نفس الوحدة." },
     "C1|HUM": { tag: "سلامة التحميل", lesson: "فصل إلزامي بين Class 1 والرفات البشرية." },
@@ -390,7 +394,15 @@ body{
     "C1|CAO": { tag: "طائرة شحن فقط", lesson: "شحنات Class 1 غالباً مقيدة/CAO — راجع قيود الطائرة ولا تخلطها بلا تحقق." },
     "C21|C3": { tag: "فصل في الحاوية", lesson: "غاز قابل للاشتعال (2.1) مع سائل قابل للاشتعال (3): خطر مشترك — افصل داخل الحاوية." },
     "C21|C51":{ tag: "فصل في الحاوية", lesson: "الغازات القابلة للاشتعال والمؤكسدات (5.1) غير متوافقة — لا في حاوية واحدة." },
+    "C21|C52":{ tag: "فصل في الحاوية", lesson: "2.1 × 5.2: غير متوافقين للحاوية الواحدة." },
     "C3|C51": { tag: "فصل في الحاوية", lesson: "السوائل القابلة للاشتعال × المؤكسدات: من أخطر التوافقات الخاطئة في التحميل." },
+    "C3|C52": { tag: "فصل في الحاوية", lesson: "Class 3 × 5.2: افصل داخل الحاوية — لا تجمعهما." },
+    "C41|C51":{ tag: "فصل في الحاوية", lesson: "4.1 × 5.1: مواد قابلة للاشتعال مع مؤكسد — ممنوع الجوار." },
+    "C51|C61":{ tag: "فصل في الحاوية", lesson: "المؤكسدات والمواد السامة تحتاج فصلًا داخل التحميل." },
+    "C61|EAT":{ tag: "فصل في الحاوية", lesson: "المواد السامة (6.1) والأغذية لا تُوضعان معاً." },
+    "C62|EAT":{ tag: "فصل في الحاوية", lesson: "المواد المعدية (6.2) والأغذية: فصل صارم." },
+    "C62|AVI":{ tag: "فصل في الحاوية", lesson: "6.2 × AVI: لا تجمع العدوى مع الحيوانات الحية." },
+    "C8|EAT": { tag: "فصل في الحاوية", lesson: "المواد المسببة للتآكل والأغذية غير متوافقة." },
     "AVI|EAT":{ tag: "فصل في الحاوية", lesson: "الحيوانات الحية (AVI) والأغذية (EAT) لا تُوضعان معاً في نفس الحاوية." },
     "AVI|HUM":{ tag: "فصل في الحاوية", lesson: "AVI و HUM: فصل إلزامي — لا يجتمعان في ULD واحد." },
     "AVI|ICE":{ tag: "تهوية / فصل", lesson: "الثانيج الجاف (ICE) يستهلك أكسجيناً — خطر على الحيوانات الحية؛ لا تجمعهما." },
@@ -399,7 +411,8 @@ body{
     "CAO|EAT":{ tag: "طائرة شحن فقط", lesson: "CAO لا يركب على طائرة ركاب — تحقق من نوع الرحلة قبل القبول مع بقية الشحن." },
     "CAO|C3": { tag: "طائرة شحن فقط", lesson: "وجود CAO مع مواد خطرة يتطلب التزاماً صارماً بقيود الشحن الجوي للبضائع فقط." },
     "CAO|C21":{ tag: "طائرة شحن فقط", lesson: "CAO + 2.1: تأكد أن الرحلة شحن فقط وأن الفصل داخل الحاوية مستوفٍ." },
-    "CAO|C1": { tag: "طائرة شحن فقط", lesson: "CAO مع Class 1: قيود مشددة — لا تعاملها كشحنة ركاب أبداً." }
+    "CAO|C1": { tag: "طائرة شحن فقط", lesson: "CAO مع Class 1: قيود مشددة — لا تعاملها كشحنة ركاب أبداً." },
+    "CAO|C23":{ tag: "طائرة شحن فقط", lesson: "الغازات السامة غالباً بقيود CAO — تحقق من نوع الطائرة." }
   };
 
   function pairKey(a, b) {
@@ -425,14 +438,14 @@ body{
     trainee: {
       id: "trainee",
       name: "مبتدئ",
-      pool: ["AVI", "EAT", "HUM", "ICE", "CAO"],
+      pool: ["AVI", "EAT", "HUM", "ICE", "CAO", "C3", "C21"],
       decisionMs: 7500,
       hints: true
     },
     senior: {
       id: "senior",
       name: "متوسط",
-      pool: ["AVI", "EAT", "HUM", "ICE", "CAO", "C3", "C21", "C22", "C51"],
+      pool: ["AVI", "EAT", "HUM", "ICE", "CAO", "C3", "C21", "C22", "C51", "C61", "C8"],
       decisionMs: 4800,
       hints: false
     },
@@ -455,6 +468,7 @@ body{
     incoming: null,
     playing: false,
     paused: false,
+    noTimer: false,
     deadline: 0,
     decisionStart: 0,
     raf: 0,
@@ -585,7 +599,14 @@ body{
     state.incoming = code;
     renderCargo(els.incoming, code);
     state.decisionStart = performance.now();
-    state.deadline = state.decisionStart + state.level.decisionMs;
+    if (state.noTimer) {
+      state.deadline = Infinity;
+      els.timer.style.transform = "scaleX(1)";
+      document.querySelector(".timerBar").classList.add("hidden");
+    } else {
+      state.deadline = state.decisionStart + state.level.decisionMs;
+      document.querySelector(".timerBar").classList.remove("hidden");
+    }
     if (state.level.hints) {
       setHint(reasonText(state.active, state.incoming), conflicts(state.active, state.incoming) ? "bad" : "ok");
     } else {
@@ -597,6 +618,11 @@ body{
 
   function tick() {
     if (!state.playing || state.paused) {
+      state.raf = requestAnimationFrame(tick);
+      return;
+    }
+    if (state.noTimer) {
+      els.timer.style.transform = "scaleX(1)";
       state.raf = requestAnimationFrame(tick);
       return;
     }
@@ -642,7 +668,7 @@ body{
     var mustReject = conflicts(state.active, state.incoming);
     var correct = wantShip ? !mustReject : mustReject;
     var elapsed = performance.now() - state.decisionStart;
-    var fast = elapsed <= state.level.decisionMs * 0.45;
+    var fast = !state.noTimer && elapsed <= state.level.decisionMs * 0.45;
 
     if (correct) {
       var pts = fast ? 150 : 100;
@@ -722,6 +748,7 @@ body{
 
   function startLevel(id) {
     state.level = LEVELS[id];
+    state.noTimer = !!(document.getElementById("noTimerOpt") && document.getElementById("noTimerOpt").checked);
     state.score = 0;
     state.lives = 3;
     state.mistakes = [];
